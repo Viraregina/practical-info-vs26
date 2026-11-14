@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
-:root{--blue:#0047bb;--green:#00b388;--ink:#18344d;--muted:#657887;--paper:#e7ebee;--sheet:#f8f6f0;--line:#ccd5da;--font-libre-franklin:"Arial Narrow","Helvetica Neue",Arial,sans-serif;--font-geist-mono:"SFMono-Regular",Consolas,monospace;--font-geist-sans:"Helvetica Neue",Arial,sans-serif}
+@font-face{font-family:"Libre Franklin";font-style:normal;font-weight:100 900;font-display:swap;src:url("/fonts/libre-franklin-latin-variable.woff2") format("woff2")}
+:root{--blue:#0047bb;--green:#00b388;--ink:#18344d;--muted:#657887;--paper:#e7ebee;--sheet:#f8f6f0;--line:#ccd5da;--font-libre-franklin:"Libre Franklin","Helvetica Neue",Arial,sans-serif;--font-geist-mono:"SFMono-Regular",Consolas,monospace;--font-geist-sans:"Libre Franklin","Helvetica Neue",Arial,sans-serif}
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;overflow:hidden}
 body{background:var(--paper);color:var(--ink);font-family:var(--font-geist-sans),Arial,sans-serif}
