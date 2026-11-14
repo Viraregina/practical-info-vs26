@@ -1,0 +1,588 @@
+@import "tailwindcss";
+
+:root{--blue:#0047bb;--green:#00b388;--ink:#18344d;--muted:#657887;--paper:#e7ebee;--sheet:#f8f6f0;--line:#ccd5da;--font-libre-franklin:"Arial Narrow","Helvetica Neue",Arial,sans-serif;--font-geist-mono:"SFMono-Regular",Consolas,monospace;--font-geist-sans:"Helvetica Neue",Arial,sans-serif}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;overflow:hidden}
+body{background:var(--paper);color:var(--ink);font-family:var(--font-geist-sans),Arial,sans-serif}
+button,select{font:inherit}
+a{color:inherit;text-decoration:none}
+
+.reader-shell{height:100dvh;display:grid;grid-template-rows:minmax(0,1fr) 68px;padding:18px 22px 0;background:linear-gradient(90deg,transparent 49.94%,rgba(24,52,77,.055) 50%,transparent 50.06%),var(--paper)}
+.document-shell{width:min(1040px,calc(100vw - 44px));height:100%;margin:auto;display:grid;place-items:center}
+.sheet{display:none;position:relative;width:100%;height:min(800px,calc(100dvh - 104px));min-height:600px;overflow:auto;background:var(--sheet);box-shadow:0 16px 44px rgba(24,52,77,.16);animation:enter .28s ease-out}
+.sheet.active{display:block}
+@keyframes enter{from{opacity:.35;transform:translateX(10px)}to{opacity:1;transform:none}}
+
+.sheet-head,.page-head{height:74px;display:flex;align-items:center;justify-content:space-between;padding:0 48px}
+.sheet-head img,.page-head img{width:185px;height:46px;object-fit:contain}
+.sheet-head p,.page-head p{margin:0;font-size:9px;line-height:1.55;letter-spacing:.11em;font-weight:750;text-align:right}
+.page-head{position:relative;border-bottom:2px solid var(--blue)}
+.page-head p{display:flex;align-items:center;gap:10px;color:var(--blue)}
+.page-head p span{display:grid;place-items:center;width:27px;height:27px;background:var(--blue);color:#fff}
+.map-sheet .page-head,.visits-sheet .page-head{border-color:var(--green)}
+.map-sheet .page-head p span,.visits-sheet .page-head p span{background:var(--green)}
+.page-foot{position:absolute;left:48px;right:48px;bottom:0;height:34px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);color:#758895;font-size:7px;letter-spacing:.14em}
+
+/* Portada */
+.cover{overflow:hidden;background:var(--blue);color:#fff}
+.cover::before{content:"";position:absolute;z-index:0;width:44%;height:125%;right:-9%;top:-12%;background:var(--green);transform:skewX(-13deg)}
+.cover::after{display:none}
+.cover .sheet-head{position:relative;z-index:2;background:var(--sheet)}
+.cover .sheet-head p{color:var(--blue)}
+.cover-title{position:relative;z-index:2;width:72%;padding:64px 48px 32px}
+.kicker{color:#b4eedf;font-size:8px;font-weight:750;letter-spacing:.15em}
+.cover-title h1{margin:25px 0 8px;font-size:clamp(70px,8.2vw,104px);line-height:.77;letter-spacing:-.075em;font-weight:760}
+.cover-title h2{margin:0 0 25px;color:#b4eedf;font-size:13px;letter-spacing:.17em;text-transform:uppercase}
+.cover-title p{max-width:490px;margin:0;color:rgba(255,255,255,.8);font-size:12px;line-height:1.55}
+.cover-index{position:absolute;z-index:3;left:48px;right:48px;bottom:49px;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(255,255,255,.55)}
+.cover-index button{appearance:none;border:0;background:transparent;padding:14px 10px 0 0;color:#fff;text-align:left;font-size:9px;font-weight:750;letter-spacing:.045em;text-transform:uppercase;cursor:pointer}
+.cover-index button:hover{color:#b4eedf}
+.cover-index span{display:block;margin-bottom:6px;color:#b4eedf;font-size:8px}
+.cover-index strong{display:block;font-size:11px;font-weight:550;line-height:1.35;letter-spacing:0;text-transform:none}.cover-index b{display:block;margin-top:8px;color:#8de0cb;font-size:16px;font-weight:400}
+.cover-foot{border-color:rgba(255,255,255,.28);color:rgba(255,255,255,.62)}
+
+/* Encabezados de página */
+.content-sheet::before,.map-sheet::before,.visits-sheet::before{content:"";position:absolute;inset:0 auto 0 0;width:10px;background:var(--blue)}
+.map-sheet::before,.visits-sheet::before{background:var(--green)}
+.lead-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:34px;align-items:end;padding:25px 48px 22px}
+.lead-grid.compact{padding-top:20px;padding-bottom:18px}
+.lead-grid h2{margin:0;color:var(--blue);font-size:clamp(40px,5vw,56px);line-height:.87;letter-spacing:-.055em}
+.map-sheet .lead-grid h2,.visits-sheet .lead-grid h2{color:var(--green)}
+.lead-grid>p{margin:0;padding:0 0 3px 17px;border-left:4px solid var(--green);color:var(--muted);font-size:11px;line-height:1.55}
+.map-sheet .lead-grid>p,.visits-sheet .lead-grid>p{border-color:var(--blue)}
+
+/* Información general */
+.info-table{display:grid;grid-template-columns:1fr 1fr;margin:0 48px 45px;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+.info-table article{position:relative;min-height:168px;padding:22px 25px 19px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.info-table article>span,.city-no{display:grid;place-items:center;width:23px;height:23px;background:var(--blue);color:#fff;font-size:8px;font-weight:750}
+.info-table h3,.city-grid h3{margin:12px 0 7px;font-size:15px;letter-spacing:-.02em}
+.info-table p,.city-grid p{margin:0 0 12px;color:var(--muted);font-size:10px;line-height:1.45}
+.info-table article:first-child{background:var(--blue);color:#fff}
+.info-table article:first-child>span{background:var(--green)}
+.info-table article:first-child p{color:rgba(255,255,255,.78)}
+.source{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:8px;border-top:1px solid var(--line);color:var(--blue);font-size:8px;font-weight:750;letter-spacing:.02em;text-transform:uppercase}
+.source b{font-size:12px}
+.info-table article:first-child .source{color:#fff;border-color:rgba(255,255,255,.35)}
+
+/* Mapa */
+.route-layout{display:grid;grid-template-columns:290px 1fr;margin:0 48px;border:1px solid var(--line);min-height:405px}
+.planner{padding:20px;background:var(--blue);color:#fff}
+.legend-control{display:flex;flex-wrap:wrap;gap:8px 12px;padding-bottom:13px;margin-bottom:13px;border-bottom:1px solid rgba(255,255,255,.28)}
+.legend-control label{display:flex;align-items:center;gap:5px;color:rgba(255,255,255,.84);font-size:8px}
+.legend-control input{width:12px;height:12px;margin:0;accent-color:var(--green)}
+.venue-dot,.bar-dot,.visit-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--blue)}
+.bar-dot{background:#f0a342}.visit-dot{background:var(--green)}
+.planner>label{display:block;margin:8px 0 5px;color:rgba(255,255,255,.68);font-size:7px;font-weight:750;letter-spacing:.1em;text-transform:uppercase}
+.planner select{width:100%;height:34px;padding:0 9px;border:1px solid rgba(255,255,255,.38);border-radius:0;background:#1759c5;color:#fff;font-size:9px}
+.swap{display:block;width:28px;height:25px;margin:5px auto;border:0;background:var(--green);color:#fff;cursor:pointer}
+.mode-controls{display:grid;grid-template-columns:1fr 1fr;margin-top:13px;border:1px solid rgba(255,255,255,.38)}
+.mode-controls button{height:31px;border:0;background:transparent;color:rgba(255,255,255,.76);font-size:8px;cursor:pointer}.mode-controls button span{margin-right:4px;font-size:12px;filter:grayscale(1)}
+.mode-controls button.selected{background:#fff;color:var(--blue)}
+.route-result{margin-top:13px;padding-top:12px;border-top:1px solid rgba(255,255,255,.3)}
+.route-result small{color:#b4eedf;font-size:7px;letter-spacing:.12em}
+.route-result h3{margin:7px 0 9px;font-size:16px;line-height:1.05}
+.route-result strong,.route-result span{display:block;font-size:9px}.route-result strong{color:#b4eedf}.route-result span{margin-top:3px}
+.route-result p{margin:8px 0 0;color:rgba(255,255,255,.64);font-size:7px;line-height:1.4}
+.public-transport{display:grid;grid-template-columns:18px 1fr auto;align-items:center;gap:7px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,255,255,.28);color:#fff}.public-transport>span:first-child{color:#b4eedf;font-size:12px}.public-transport strong,.public-transport small{display:block}.public-transport strong{font-size:8px}.public-transport small{margin-top:2px;color:rgba(255,255,255,.62);font-size:7px}.public-transport b{color:#b4eedf;font-size:11px}
+.editorial-map{display:grid;grid-template-rows:32px 1fr 30px;min-width:0;background:#dce8e6}
+.map-label,.map-caption{display:flex;align-items:center;justify-content:space-between;padding:0 15px;background:rgba(255,255,255,.62);font-size:7px;font-weight:750;letter-spacing:.09em}
+.map-caption{justify-content:flex-start;gap:17px}.map-caption span{display:flex;align-items:center;gap:5px}
+.map-field{position:relative;overflow:hidden;background:linear-gradient(28deg,transparent 35%,rgba(255,255,255,.5) 35.4%,rgba(255,255,255,.5) 36%,transparent 36.4%),linear-gradient(110deg,#dce8e6,#cbded9)}
+.water{position:absolute;right:-20px;bottom:-24px;width:55%;height:42%;padding:35px 35px;color:rgba(0,71,187,.38);background:#a9d9e5;transform:rotate(-8deg);font-size:7px;letter-spacing:.12em}
+.avenue{position:absolute;height:2px;background:rgba(255,255,255,.72);transform-origin:left center}.av1{width:85%;left:5%;top:22%;transform:rotate(15deg)}.av2{width:90%;left:1%;top:48%;transform:rotate(-8deg)}.av3{width:75%;left:22%;top:70%;transform:rotate(10deg)}.av4{width:65%;left:34%;top:8%;transform:rotate(72deg)}
+.route-line{position:absolute;z-index:3;height:3px;background:var(--green);transform-origin:left center;box-shadow:0 0 0 1px rgba(255,255,255,.8)}
+.map-point{position:absolute;z-index:4;display:flex;align-items:center;gap:5px;padding:0;border:0;background:transparent;color:var(--ink);font-size:7px;font-weight:750;cursor:pointer;transform:translate(-5px,-5px)}
+.map-point i{display:block;width:10px;height:10px;border:2px solid #fff;border-radius:50%;background:var(--blue);box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.map-point.bar i{background:#f0a342}.map-point.visit i{background:var(--green)}.map-point.active i{width:14px;height:14px;box-shadow:0 0 0 3px rgba(0,179,136,.25)}
+.map-point span{padding:2px 4px;background:rgba(248,246,240,.88);white-space:nowrap}
+.map-disclaimer{margin:10px 48px 42px;color:var(--muted);font-size:8px;line-height:1.4}
+
+/* Montevideo */
+.city-grid{display:grid;grid-template-columns:repeat(4,1fr);margin:0 48px;border:1px solid var(--line)}
+.city-grid article{min-height:250px;padding:22px 18px;border-right:1px solid var(--line)}
+.city-grid article:last-child{border-right:0}
+.city-grid article:nth-child(2){background:var(--green);color:#fff}.city-grid article:nth-child(2) .city-no{background:var(--blue)}.city-grid article:nth-child(2) p{color:rgba(255,255,255,.8)}.city-grid article:nth-child(2) .source{color:#fff;border-color:rgba(255,255,255,.35)}
+.related-links{display:grid;grid-template-columns:1fr 1fr;margin:14px 48px 42px}
+.related-links a{display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;padding:14px 18px;background:var(--blue);color:#fff}.related-links a:last-child{background:var(--green)}
+.related-links span{font-size:7px;letter-spacing:.1em;text-transform:uppercase;opacity:.7}.related-links strong{font-size:12px}.related-links b{grid-column:2;grid-row:1/3;align-self:center}
+
+/* Recomendaciones especiales */
+.recommendations-grid{display:grid;grid-template-columns:1.15fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:1px;margin:0 48px 42px;background:var(--line);border:1px solid var(--line)}
+.recommendation{display:flex;min-height:190px;flex-direction:column;padding:20px;background:var(--sheet)}
+.recommendation.featured{grid-row:1/3;background:var(--blue);color:#fff}
+.recommendation.green{background:var(--green);color:#fff}
+.recommendation.wide{background:#edf1ef}
+.recommendation>span{color:var(--green);font-size:7px;font-weight:760;letter-spacing:.12em}
+.recommendation.featured>span,.recommendation.green>span{color:#b4eedf}
+.recommendation h3{margin:11px 0 8px;color:var(--blue);font-size:22px;line-height:1;letter-spacing:-.035em}
+.recommendation.featured h3{margin-top:18px;color:#fff;font-size:36px}.recommendation.green h3{color:#fff}
+.recommendation p{margin:0 0 12px;color:var(--muted);font-size:9px;line-height:1.5}
+.recommendation.featured p,.recommendation.green p{color:rgba(255,255,255,.8)}
+.recommendation small{display:block;margin-top:auto;margin-bottom:10px;color:var(--muted);font-size:7px;font-weight:680;line-height:1.35;text-transform:uppercase}
+.recommendation.featured small,.recommendation.green small{color:rgba(255,255,255,.7)}
+.recommendation.featured .source,.recommendation.green .source{color:#fff;border-color:rgba(255,255,255,.32)}
+
+/* Navegador del dossier */
+.reader-nav{width:min(1040px,calc(100vw - 44px));height:68px;margin:auto;display:grid;grid-template-columns:42px 190px 1fr 42px;align-items:center;gap:13px}
+.arrow{width:38px;height:38px;border:1px solid rgba(24,52,77,.28);border-radius:50%;background:transparent;color:var(--blue);font-size:19px;cursor:pointer}.arrow:disabled{opacity:.2;cursor:default}
+.page-status{display:grid;grid-template-columns:48px 1fr;align-items:center}.page-status span{color:var(--green);font:750 9px/1 var(--font-geist-mono)}.page-status strong{font-size:10px;text-transform:uppercase}
+.page-dots{display:flex;justify-content:center;gap:9px}.page-dots button{width:26px;height:3px;padding:0;border:0;background:rgba(24,52,77,.2);cursor:pointer;transition:.2s}.page-dots button.current{width:64px;background:var(--green)}
+
+@media(max-width:800px){
+  .reader-shell{grid-template-rows:minmax(0,1fr) 62px;padding:0}.document-shell,.sheet{width:100vw}.sheet{height:calc(100dvh - 62px);min-height:0;box-shadow:none}
+  .sheet-head,.page-head{padding:0 24px}.sheet-head img,.page-head img{width:150px}.page-foot{left:24px;right:24px}
+  .cover-title{width:86%;padding:56px 24px 30px}.cover-title h1{font-size:58px}.cover::before{width:58%;right:-28%}.cover-index{left:24px;right:24px;grid-template-columns:1fr 1fr;gap:10px}.cover-foot{left:24px;right:24px}
+  .lead-grid{grid-template-columns:1fr;padding:22px 24px 18px;gap:14px}.lead-grid h2{font-size:40px}.lead-grid>p{font-size:10px}
+  .info-table{margin:0 24px 42px}.route-layout{grid-template-columns:1fr;margin:0 24px 42px}.editorial-map{min-height:360px}.map-disclaimer{display:none}
+  .city-grid{grid-template-columns:1fr 1fr;margin:0 24px}.city-grid article{min-height:210px}.related-links{margin:12px 24px 42px}
+  .recommendations-grid{grid-template-columns:1fr;margin:0 24px 42px}.recommendation.featured{grid-row:auto}.recommendation{min-height:180px}
+  .reader-nav{width:100%;height:62px;padding:0 12px;grid-template-columns:40px 1fr 40px}.page-status{grid-column:2}.page-dots{display:none}.reader-nav .arrow:last-child{grid-column:3}
+}
+
+/* Revisión de arte: lo local y la agenda recuperan el lenguaje editorial del documento. */
+#local{position:relative;overflow:hidden;background:var(--blue)!important}
+#local::before{content:"";position:absolute;inset:0 0 auto auto;width:42%;height:100%;background:var(--green);clip-path:polygon(32% 0,100% 0,100% 100%,0 100%);opacity:.96}
+.local-sheet{padding-top:88px;padding-bottom:96px}
+.local-lead{position:relative;z-index:1;grid-template-columns:1fr 1.15fr;gap:70px;margin-bottom:66px}
+.local-lead h2{font-size:clamp(58px,7vw,92px)}
+.local-lead p{padding:4px 0 4px 28px;border-left:3px solid var(--green);color:#fff;font-size:17px;line-height:1.72}
+#local .accredited-benefits{position:relative;z-index:1;gap:14px;border:0}
+#local .accredited-benefits>.benefit-card{min-height:310px;padding:38px;border:1px solid rgba(255,255,255,.28);border-radius:18px;background:rgba(0,48,130,.88);box-shadow:0 18px 40px rgba(0,31,83,.2)}
+#local .accredited-benefits>.benefit-card:last-child{background:#f3efe3;color:var(--blue)}
+#local .accredited-benefits>.benefit-card:last-child h3{color:var(--blue)!important}
+#local .accredited-benefits>.benefit-card:last-child p{color:#53677d!important}
+#local .accredited-benefits>.benefit-card:last-child small,#local .accredited-benefits>.benefit-card:last-child strong{color:#008f70}
+#local .accredited-benefits>.benefit-card:last-child .benefit-mark{border-color:rgba(0,71,187,.25);color:var(--blue)}
+#local .accredited-benefits>.benefit-card:hover{transform:translateY(-7px);box-shadow:0 24px 50px rgba(0,31,83,.28)}
+
+#montevideo .city-grid article:nth-child(4){border-color:rgba(0,179,136,.35);background:#eee8db;color:#008f70}
+#montevideo .city-grid article:nth-child(4) h3,#montevideo .city-grid article:nth-child(4) .source{color:#007c63!important}
+#montevideo .city-grid article:nth-child(4) p{color:#53677d!important}
+#montevideo .city-grid article:nth-child(4) .city-no{background:var(--green);color:#fff}
+
+.culture-edit{margin-top:38px;padding:55px 38px 38px;border:0;border-radius:24px;background:var(--blue);color:#fff;box-shadow:0 18px 45px rgba(0,38,103,.14)}
+.culture-intro{grid-template-columns:.72fr 1.28fr;margin-bottom:34px}
+.culture-intro h3{color:#fff!important}.culture-intro p{color:rgba(255,255,255,.8)!important}.culture-intro>span{color:#96e4d0}
+.culture-list{grid-template-columns:repeat(2,1fr);gap:14px}
+.culture-card{display:grid;grid-template-rows:190px 1fr;min-height:475px;padding:0;overflow:hidden;border:1px solid rgba(255,255,255,.2);background:#073f9f!important}
+.culture-card:nth-child(2){background:#00685b!important}.culture-card:nth-child(3){background:#007f69!important}.culture-card:nth-child(4){background:#123f91!important}
+.culture-card.ideas-card{grid-column:1/-1;grid-template-columns:38% 1fr;grid-template-rows:1fr;min-height:300px;background:#f1ecdf!important;color:var(--blue)}
+.culture-card>img{width:100%;height:190px;object-fit:cover;filter:saturate(.82);transition:transform .45s ease,filter .45s ease}
+.culture-card:hover>img{transform:scale(1.025);filter:saturate(1)}
+.culture-card>div{display:flex;flex-direction:column;padding:24px 25px 26px}
+.culture-card h4{font-size:27px}.culture-card strong{margin-top:auto}
+.culture-card.ideas-card>img{height:100%;max-height:360px;object-fit:cover}.culture-card.ideas-card h4{color:var(--blue);font-size:34px}.culture-card.ideas-card p{color:#53677d!important}.culture-card.ideas-card small,.culture-card.ideas-card strong{color:#008f70}
+
+.bars-modal{inset:3vh 3vw;padding:46px 48px;background:rgba(0,50,139,.985)}
+.bars-modal-head{margin-bottom:34px}.bars-modal-head h2{font-size:52px}.bars-modal-head p{font-size:15px}
+.bars-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+.bars-grid article{grid-template-columns:82px 1fr;min-height:170px;padding:20px 22px;border-radius:17px;background:rgba(255,255,255,.08)}
+.bars-grid img{width:76px;height:76px;padding:0;border-radius:14px;object-fit:cover;background:#fff}
+.bars-grid h3{font-size:20px}.bars-grid p{font-size:11px}.bar-actions{display:flex;gap:18px;align-items:center}.bars-grid .bar-actions button,.bars-grid .bar-actions a{display:inline-block;font-size:9px}
+
+@media(max-width:800px){
+  #local::before{width:100%;height:34%;inset:auto 0 0;clip-path:polygon(0 28%,100% 0,100% 100%,0 100%)}
+  .local-sheet{padding-top:68px}.local-lead{grid-template-columns:1fr;gap:28px}.local-lead h2{font-size:58px}.local-lead p{padding-left:20px;font-size:15px}
+  #local .accredited-benefits>.benefit-card{min-height:250px;padding:28px 22px}
+  .culture-edit{margin:35px 4% 25px;padding:38px 18px 22px;border-radius:18px}.culture-intro{grid-template-columns:1fr}.culture-list{grid-template-columns:1fr}.culture-card{grid-template-rows:180px 1fr;min-height:430px}.culture-card.ideas-card{grid-column:auto;grid-template-columns:1fr;grid-template-rows:180px 1fr;min-height:430px}.culture-card.ideas-card>img{height:180px}
+  .bars-modal{padding:54px 18px 28px}.bars-grid{grid-template-columns:1fr}.bars-grid article{grid-template-columns:64px 1fr}.bars-grid img{width:58px;height:58px}.bars-modal-head h2{font-size:40px}
+}
+
+/* Primera revisión editorial: portada, contraste y escala. */
+body,.leaflet-container{font-family:var(--font-libre-franklin),Arial,sans-serif}
+
+/* Portada: título limpio y accesos como pastillas. */
+.cover::before{display:none}
+.cover{display:grid!important;grid-template-columns:minmax(0,1.15fr) minmax(350px,.85fr);grid-template-rows:96px 1fr;min-height:100svh;padding:0}
+.cover .sheet-head{grid-column:1/-1;width:100%;max-width:none;margin:0;padding-inline:6%}
+.cover-title{grid-column:1;display:flex;align-items:center;width:auto;margin:0;padding:0 7%}
+.cover-title h1{margin:0;font-family:var(--font-libre-franklin),Arial,sans-serif;font-size:clamp(64px,7.5vw,108px);font-weight:500;line-height:.86;letter-spacing:-.065em}
+.cover-index{position:static;grid-column:2;align-self:center;display:flex;width:auto;max-width:460px;margin:0 8% 0 0;flex-direction:column;gap:10px;border:0}
+.cover-index button{display:grid;grid-template-columns:1fr auto;align-items:center;min-height:58px;padding:14px 19px;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:var(--green);color:#fff;text-align:left;text-transform:none;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease,filter .2s ease}
+.cover-index button:hover{color:#fff;transform:translateY(-3px) scale(1.015);box-shadow:0 10px 24px rgba(0,0,0,.2);filter:brightness(1.05)}
+.cover-index strong{font-size:13px;font-weight:600;line-height:1.25}
+.cover-index b{margin:0;color:#fff;font-size:17px;font-weight:400}
+
+/* Las hojas mantienen el campo azul y el texto legible. */
+#antes,#mapa,#sedes,#montevideo,#agenda{background:var(--blue)!important;color:#fff!important}
+#antes h2,#antes h3,#antes p,#mapa h2,#mapa h3,#mapa p,#sedes h2,#sedes h3,#sedes p,#montevideo h2,#montevideo h3,#montevideo p,#agenda h2,#agenda h3,#agenda p{color:inherit}
+.page-head,.page-head p,.page-foot{color:#fff}
+#antes .source,#mapa .source,#sedes .source,#montevideo .source,#agenda .source{color:#fff}
+
+/* Recomendaciones arriba y con 130 años como pieza principal. */
+.visits-sheet .lead-grid{padding-top:44px;padding-bottom:28px}
+.recommendations-grid{margin-bottom:75px}
+.recommendation{min-height:210px}
+.recommendation.featured h3{font-size:34px}
+
+/* Sedes compactas: la serie completa entra como una lámina. */
+.venues-sheet .lead-grid{padding-top:38px;padding-bottom:24px}
+.venues-sheet .lead-grid h2{font-size:clamp(34px,3.8vw,52px)}
+.venues-gallery{grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:70px}
+.venue-card{min-height:205px;border-radius:12px}
+.venue-card.wide{grid-column:span 2;min-height:205px}
+.venue-card>div{left:15px;right:15px;bottom:13px}
+.venue-card>div>span{font-size:7px}
+.venue-card h3{margin:6px 0 4px;font-size:16px}
+.venue-card p{margin-bottom:8px;font-size:8px}
+.venue-card a{padding-top:7px;font-size:8px}
+
+@media(max-width:800px){
+  .cover{display:block!important}
+  .cover-title{min-height:42svh;padding:60px 7%}
+  .cover-title h1{font-size:58px}
+  .cover-index{width:86%;max-width:none;margin:0 auto 80px}
+  .venues-gallery{grid-template-columns:1fr 1fr}
+  .venue-card.wide{grid-column:span 2}
+  .venue-card,.venue-card.wide{min-height:240px}
+}
+
+/* Dirección final: azul como campo principal; verde sólo como acento. */
+.document-shell{display:flex;flex-direction:column}
+#inicio{order:0}#antes{order:1}#mapa{order:2}#sedes{order:3}#agenda{order:4}#local{order:5}#montevideo{order:6}
+#antes,#mapa,#sedes,#montevideo,#agenda{background:var(--blue);color:#fff}
+.page-head{background:var(--blue);border-color:rgba(255,255,255,.28)}
+.page-head p{color:#fff}.page-head p span,.map-sheet .page-head p span,.venues-sheet .page-head p span,.visits-sheet .page-head p span{background:var(--green)}
+.page-foot{color:rgba(255,255,255,.58);border-color:rgba(255,255,255,.25)}
+.content-sheet::before,.map-sheet::before,.venues-sheet::before,.visits-sheet::before{display:none}
+.lead-grid h2,.map-sheet .lead-grid h2,.venues-sheet .lead-grid h2,.visits-sheet .lead-grid h2{color:#fff}
+.lead-grid>p{color:rgba(255,255,255,.75)}
+.info-table{grid-template-columns:1fr 1fr}
+.info-table article,.info-table article:first-child{min-height:230px;background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.24)}
+.info-table article>span,.info-table article:first-child>span,.city-no{background:var(--green)}
+.info-table p,.info-table article:first-child p,.city-grid p{color:rgba(255,255,255,.72)}
+.info-table .source,.info-table article:first-child .source{color:#fff;border-color:rgba(255,255,255,.3)}
+.recommendation,.recommendation.featured,.recommendation.green,.recommendation.wide{background:rgba(255,255,255,.085);color:#fff;border-color:rgba(255,255,255,.22)}
+.recommendation.featured{background:rgba(0,0,0,.14)}
+.recommendation>span,.recommendation.featured>span,.recommendation.green>span{color:#86e0c9}
+.recommendation h3,.recommendation.featured h3,.recommendation.green h3{color:#fff}
+.recommendation p,.recommendation.featured p,.recommendation.green p,.recommendation small,.recommendation.featured small,.recommendation.green small{color:rgba(255,255,255,.72)}
+.recommendation .source,.recommendation.featured .source,.recommendation.green .source{color:#fff;border-color:rgba(255,255,255,.28)}
+.route-layout{box-shadow:0 16px 44px rgba(0,0,0,.18)}.planner{background:#003891}.map-disclaimer{color:rgba(255,255,255,.75);border-color:var(--green)}
+.city-grid article,.city-grid article:nth-child(2){background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.22)}
+.city-grid article:nth-child(2) .city-no{background:var(--green)}.city-grid article:nth-child(2) p{color:rgba(255,255,255,.72)}
+.city-grid .source,.city-grid article:nth-child(2) .source{color:#fff;border-color:rgba(255,255,255,.28)}
+.related-links a,.related-links a:last-child{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.22)}
+.venues-gallery{background:transparent}.venue-card{border:1px solid rgba(255,255,255,.22);box-shadow:0 12px 32px rgba(0,0,0,.14)}
+.cover .sheet-head{background:var(--blue);border-bottom:1px solid rgba(255,255,255,.25)}.cover .sheet-head p{color:#fff}
+.practical-lead{padding-bottom:28px}
+.practical-list{max-width:980px;margin:0 auto 100px;border-top:1px solid rgba(255,255,255,.3)}
+.practical-list details{border-bottom:1px solid rgba(255,255,255,.3)}
+.practical-list summary{list-style:none;display:grid;grid-template-columns:48px 1fr 30px;align-items:center;gap:20px;padding:24px 0;color:#fff;cursor:pointer}
+.practical-list summary::-webkit-details-marker{display:none}
+.practical-list summary i{display:grid;place-items:center;width:42px;height:42px;border:1px solid rgba(255,255,255,.5);border-radius:50%;color:#8de0cb;font-style:normal;font-size:16px}
+.practical-list summary span{font-size:22px;font-weight:500}.practical-list summary small{display:block;margin-bottom:4px;color:#8de0cb;font-size:8px;font-weight:650;letter-spacing:.14em}
+.practical-list summary b{color:#8de0cb;font-size:25px;font-weight:400;transition:transform .2s}.practical-list details[open] summary b{transform:rotate(45deg)}
+.practical-list details>div{max-width:700px;margin:0 0 25px 68px;color:rgba(255,255,255,.75);font-size:14px;line-height:1.65}.practical-list details>div p{margin:0 0 12px}.practical-list details>div a{color:#9be5d2;text-decoration:underline;text-underline-offset:5px}
+@media(max-width:800px){.practical-list{margin:0 6% 80px}.practical-list summary{grid-template-columns:42px 1fr 22px;gap:12px}.practical-list summary i{width:38px;height:38px}.practical-list summary span{font-size:18px}.practical-list details>div{margin-left:54px}}
+
+/* Ajustes de precisión: mapa urbano real y sedes más delicadas. */
+#real-city-map{position:relative;width:100%;height:100%;min-height:520px;z-index:1;background:#e7eceb}
+.leaflet-container{font-family:'Avenir Next',Avenir,system-ui,sans-serif}.leaflet-tile-pane{filter:saturate(.48) contrast(.96)}.leaflet-control-attribution{font-size:8px!important}.leaflet-tooltip{border:0;border-radius:8px;color:#17324d;font-size:10px;box-shadow:0 3px 12px rgba(24,52,77,.16)}
+.real-marker{border:0!important;background:transparent!important}.real-marker span{display:block;width:20px;height:20px;border:3px solid #fff;border-radius:50%;background:var(--blue);box-shadow:0 2px 9px rgba(24,52,77,.42)}.real-marker.bar span{background:#e9a33a}.real-marker.visit span{background:var(--green)}
+.leaflet-interactive{stroke-linecap:round;stroke-linejoin:round}
+.venues-gallery{grid-template-columns:repeat(3,1fr);gap:11px}
+.venue-card{min-height:285px;border-radius:15px}.venue-card.wide{min-height:245px}.venue-card>div{left:19px;right:19px;bottom:17px}.venue-card>div>span{font-size:8px}.venue-card h3{margin:7px 0 5px;font-size:20px}.venue-card p{margin-bottom:10px;font-size:10px}.venue-card a{padding-top:8px;font-size:9px}
+@media(max-width:800px){#real-city-map{min-height:460px}.venue-card,.venue-card.wide{min-height:300px}}
+
+@media(max-height:720px) and (min-width:801px){.sheet{min-height:0}.cover-title{padding-top:35px}.cover-title h1{font-size:72px}.cover-index{bottom:42px}.lead-grid{padding-top:16px;padding-bottom:14px}.lead-grid h2{font-size:42px}.info-table article{min-height:145px}.route-layout{min-height:350px}.city-grid article{min-height:220px}.recommendation{min-height:165px;padding:16px}}
+
+/* Lectura continua: conserva saltos por sección sin encerrar el contenido en diapositivas. */
+html{scroll-behavior:smooth;scroll-padding-top:0}
+html,body{height:auto;min-height:100%;overflow-x:hidden;overflow-y:auto}
+body{font-family:'Avenir Next',Avenir,var(--font-geist-sans),system-ui,sans-serif}
+.reader-shell{height:auto;display:block;padding:0;background:var(--paper)}
+.document-shell{display:block;width:100%;height:auto;margin:0}
+.sheet,.sheet.active{display:block;width:100%;height:auto;min-height:100svh;overflow:hidden;box-shadow:none;animation:none;padding-bottom:68px}
+.sheet-head,.page-head{max-width:1220px;margin:0 auto;height:96px;padding-inline:6%}
+.sheet-head img,.page-head img{width:205px}
+.page-head{border-bottom:1px solid rgba(0,71,187,.24)}
+.page-head p{font-size:10px}
+.page-foot{left:6%;right:6%;height:44px}
+
+.cover{min-height:100svh;padding-bottom:0}
+.cover .sheet-head{max-width:none;padding-inline:6%}
+.cover-title{width:min(1220px,88%);margin:0 auto;padding:clamp(70px,10vh,120px) 0 60px}
+.cover-title h1{font-size:clamp(66px,8vw,108px);font-weight:500;line-height:.88}
+.cover-title p{font-size:17px;line-height:1.65}
+.cover-index{left:6%;right:6%;bottom:68px;max-width:1220px;margin:auto;grid-template-columns:repeat(5,1fr)}
+.cover-index button{font-size:11px;font-weight:600}
+
+#antes{background:linear-gradient(140deg,#f7f5ef 20%,#e2eeeb 100%)}
+#mapa{background:linear-gradient(145deg,#e8f0ee,#d7e7e4 72%,#c9ddd8)}
+#montevideo{background:linear-gradient(140deg,#f7f5ef,#e2eee9 65%,#d1e8df)}
+#agenda{background:linear-gradient(145deg,#e8eef5,#dce8e6)}
+#sedes{background:linear-gradient(145deg,#f1f3ed,#dce9e5 72%,#cfe3dc)}
+.venues-sheet::before{content:"";position:absolute;inset:0 auto 0 0;width:10px;background:var(--green)}
+.venues-sheet .page-head{border-color:rgba(0,179,136,.35)}.venues-sheet .page-head p span{background:var(--green)}.venues-sheet .lead-grid h2{color:var(--green)}
+.lead-grid{max-width:1220px;margin:0 auto;padding:80px 6% 48px;grid-template-columns:1.05fr .95fr;gap:65px}
+.lead-grid.compact{padding-top:65px;padding-bottom:42px}
+.lead-grid h2{font-size:clamp(44px,5.4vw,70px);font-weight:500;line-height:1.02;letter-spacing:-.055em}
+.lead-grid>p{font-size:17px;line-height:1.7;border-left:0;padding-left:0}
+.info-table,.route-layout,.city-grid,.related-links,.recommendations-grid{max-width:1220px;margin-left:auto;margin-right:auto}
+.info-table{margin-bottom:90px;border:0;gap:12px;background:transparent}
+.info-table article{min-height:220px;padding:28px;border:1px solid rgba(0,71,187,.16);border-radius:18px;background:rgba(255,255,255,.42)}
+.info-table article:first-child{background:var(--blue)}
+.info-table h3,.city-grid h3{font-size:20px;font-weight:500}
+.info-table p,.city-grid p{font-size:14px;line-height:1.62}
+.source{font-size:10px;text-transform:none}
+.route-layout{grid-template-columns:340px 1fr;min-height:580px;margin-bottom:24px;border:0;border-radius:24px;overflow:hidden;box-shadow:0 14px 40px rgba(24,52,77,.1)}
+.planner{padding:28px}.planner>label{font-size:10px}.planner select{height:43px;border-radius:9px;font-size:13px}.swap{width:36px;height:34px;border-radius:50%;font-size:18px}.mode-controls{gap:7px;border:0}.mode-controls button{height:42px;border:1px solid rgba(255,255,255,.36);border-radius:9px;font-size:11px}.route-result h3{font-size:22px}.route-result p,.public-transport small{font-size:11px}.route-result strong,.route-result span,.public-transport strong{font-size:12px}.map-disclaimer{max-width:1220px;margin:24px auto 90px;padding:20px 25px;border-left:3px solid var(--blue);font-size:13px;line-height:1.6}
+.city-grid{margin-bottom:20px;border:0;gap:12px}.city-grid article{min-height:320px;padding:28px;border:1px solid rgba(0,71,187,.15);border-radius:18px;background:rgba(255,255,255,.38)}.city-grid article:nth-child(2){background:var(--green)}
+.related-links{margin-bottom:90px;gap:12px}.related-links a{border-radius:16px;padding:22px 25px}
+.recommendations-grid{margin-bottom:90px;gap:12px;background:transparent;border:0}.recommendation{min-height:240px;padding:27px;border:1px solid rgba(0,71,187,.14);border-radius:18px;background:rgba(255,255,255,.48)}.recommendation.featured{background:var(--blue)}.recommendation.green{background:var(--green)}.recommendation h3{font-size:26px;font-weight:500}.recommendation.featured h3{font-size:42px}.recommendation p{font-size:13px;line-height:1.6}
+.venues-gallery{max-width:1220px;margin:0 auto 90px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.venue-card{position:relative;min-height:390px;overflow:hidden;border-radius:20px;background:var(--blue);color:#fff;box-shadow:0 12px 32px rgba(24,52,77,.1)}
+.venue-card.wide{grid-column:span 3;min-height:330px}
+.venue-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.72);transition:transform .5s ease,filter .5s ease}
+.venue-card::after{content:"";position:absolute;inset:24% 0 0;background:linear-gradient(transparent,rgba(0,38,103,.92))}
+.venue-card.wide::after{inset:0;background:linear-gradient(90deg,rgba(0,38,103,.92),rgba(0,38,103,.35) 60%,transparent)}
+.venue-card:hover img{transform:scale(1.035);filter:saturate(1)}
+.venue-card>div{position:absolute;z-index:2;left:24px;right:24px;bottom:22px}
+.venue-card>div>span{color:#b4eedf;font-size:9px;font-weight:650;letter-spacing:.11em;text-transform:uppercase}
+.venue-card h3{max-width:310px;margin:9px 0 6px;font-size:25px;font-weight:500;line-height:1.05;letter-spacing:-.035em}
+.venue-card p{margin:0 0 14px;color:rgba(255,255,255,.75);font-size:12px}
+.venue-card a{display:flex;justify-content:space-between;padding-top:10px;border-top:1px solid rgba(255,255,255,.34);font-size:10px}.venue-card a b{font-size:13px}
+
+.reader-nav{position:fixed;z-index:20;right:24px;bottom:22px;width:auto;height:52px;margin:0;padding:0 12px;display:flex;align-items:center;gap:13px;border:1px solid rgba(0,71,187,.15);border-radius:28px;background:rgba(248,246,240,.9);box-shadow:0 8px 26px rgba(24,52,77,.14);backdrop-filter:blur(14px)}
+.reader-nav .arrow{width:28px;height:36px;border:0;border-radius:0;background:transparent;color:var(--blue);font-family:Georgia,serif;font-size:30px;font-weight:400;line-height:1}
+.page-status{display:flex;gap:9px}.page-status span{font-size:9px}.page-status strong{font-size:9px;font-weight:600}
+.page-dots{gap:6px}.page-dots button{width:7px;height:7px;border-radius:50%}.page-dots button.current{width:24px;border-radius:5px}
+
+@media(max-width:800px){
+  .sheet,.sheet.active{height:auto;min-height:100svh}.sheet-head,.page-head{height:78px;padding-inline:6%}.cover-title{width:88%;padding-top:70px}.cover-title h1{font-size:58px}.cover-title p{font-size:16px}.cover-index{position:relative;left:auto;right:auto;bottom:auto;width:88%;padding-bottom:80px}
+  .lead-grid,.lead-grid.compact{padding:60px 6% 35px;grid-template-columns:1fr;gap:18px}.lead-grid h2{font-size:44px}.lead-grid>p{font-size:16px}
+  .info-table,.route-layout,.city-grid,.related-links,.recommendations-grid{margin-left:6%;margin-right:6%}.info-table{grid-template-columns:1fr}.route-layout{grid-template-columns:1fr}.city-grid{grid-template-columns:1fr}.recommendations-grid{grid-template-columns:1fr}.recommendation.featured{grid-row:auto}
+  .venues-gallery{margin:0 6% 80px;grid-template-columns:1fr}.venue-card,.venue-card.wide{grid-column:auto;min-height:360px}
+  .reader-nav{right:12px;bottom:12px}.page-status strong,.page-dots{display:none}
+}
+
+/* Overrides finales de la revisión 01. */
+body,.leaflet-container{font-family:var(--font-libre-franklin),Arial,sans-serif}
+.cover{display:grid!important;grid-template-columns:minmax(0,1.15fr) minmax(350px,.85fr);grid-template-rows:96px 1fr;min-height:100svh;padding:0}
+.cover::before{display:none}
+.cover .sheet-head{grid-column:1/-1;width:100%;max-width:none;margin:0;padding-inline:6%}
+.cover-title{grid-column:1;display:flex;align-items:center;width:auto;margin:0;padding:0 7%}
+.cover-title h1{margin:0;font-family:var(--font-libre-franklin),Arial,sans-serif;font-size:clamp(64px,7.5vw,108px);font-weight:500;line-height:.86;letter-spacing:-.065em}
+.cover-index{position:static;grid-column:2;align-self:center;display:flex;width:auto;max-width:460px;margin:0 8% 0 0;flex-direction:column;gap:10px;border:0}
+.cover-index button{display:grid;grid-template-columns:1fr auto;align-items:center;min-height:58px;padding:14px 19px;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:var(--green);color:#fff;text-align:left;text-transform:none;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease,filter .2s ease}
+.cover-index button:hover{color:#fff;transform:translateY(-3px) scale(1.015);box-shadow:0 10px 24px rgba(0,0,0,.2);filter:brightness(1.05)}
+.cover-index strong{font-size:13px;font-weight:600;line-height:1.25}.cover-index b{margin:0;color:#fff;font-size:17px;font-weight:400}
+#antes,#mapa,#sedes,#montevideo,#agenda{background:var(--blue)!important;color:#fff!important}
+.visits-sheet .lead-grid{padding-top:44px;padding-bottom:28px}.recommendations-grid{margin-bottom:75px}.recommendation{min-height:210px}.recommendation.featured h3{font-size:34px}
+.venues-sheet .lead-grid,.venues-sheet .lead-grid.compact{padding-top:38px;padding-bottom:24px}.venues-sheet .lead-grid h2{font-size:clamp(34px,3.8vw,52px)}
+.venues-gallery{grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:70px}.venue-card{min-height:205px;border-radius:12px}.venue-card.wide{grid-column:span 2;min-height:205px}.venue-card>div{left:15px;right:15px;bottom:13px}.venue-card>div>span{font-size:7px}.venue-card h3{margin:6px 0 4px;font-size:16px}.venue-card p{margin-bottom:8px;font-size:8px}.venue-card a{padding-top:7px;font-size:8px}
+@media(max-width:800px){.cover{display:block!important}.cover-title{min-height:42svh;padding:60px 7%}.cover-title h1{font-size:58px}.cover-index{width:86%;max-width:none;margin:0 auto 80px;padding-bottom:0}.venues-gallery{grid-template-columns:1fr 1fr}.venue-card.wide{grid-column:span 2}.venue-card,.venue-card.wide{min-height:240px}}
+
+/* Beneficios: bloque secundario, deliberadamente más bajo que las recomendaciones. */
+.accredited-benefits{display:grid;grid-template-columns:.8fr 1fr 1fr;max-width:1220px;margin:-50px auto 90px;border-top:1px solid rgba(255,255,255,.28);border-bottom:1px solid rgba(255,255,255,.28);color:#fff}
+.accredited-benefits>div,.accredited-benefits article{min-height:150px;padding:22px 22px 20px}
+.accredited-benefits article{display:grid;grid-template-columns:42px 1fr;gap:15px;border-left:1px solid rgba(255,255,255,.22)}
+.benefits-intro>span,.accredited-benefits small{display:block;margin-bottom:8px;color:#8de0cb;font-size:7px;font-weight:700;letter-spacing:.13em}
+.accredited-benefits h3{margin:0 0 7px;color:#fff!important;font-size:18px;font-weight:550;letter-spacing:-.025em}
+.benefits-intro p,.accredited-benefits article p{margin:0;color:rgba(255,255,255,.68)!important;font-size:10px;line-height:1.5}
+.accredited-benefits article strong{display:block;margin-top:12px;color:#8de0cb;font-size:8px;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.benefit-mark{display:grid;place-items:center;width:38px;height:38px;border:1px solid rgba(255,255,255,.45);border-radius:50%;color:#fff;font-size:10px;font-weight:650}
+@media(max-width:800px){.accredited-benefits{grid-template-columns:1fr;margin:-45px 6% 80px}.accredited-benefits article{border-top:1px solid rgba(255,255,255,.22);border-left:0}}
+
+/* Portada: accesos más contenidos y menos alargados. */
+.cover-index{width:min(380px,88%);margin-right:11%}
+.cover-index button{min-height:45px;padding:10px 15px}
+.cover-index strong{font-size:11px}.cover-index b{font-size:14px}
+@media(max-width:800px){.cover-index{width:82%;margin:0 auto 80px}.cover-index button{min-height:46px}}
+
+/* Limpieza del documento continuo: cada sección se identifica por su propio campo. */
+.page-head,.page-foot{display:none}
+.sheet,.sheet.active{padding-bottom:0}
+#antes{background:#f5f3ec!important;color:var(--blue)!important}
+#antes .lead-grid h2{color:var(--blue)!important}
+#antes .lead-grid,#mapa .lead-grid,#sedes .lead-grid,#montevideo .lead-grid,#agenda .lead-grid{display:block;padding-top:62px;padding-bottom:34px}
+#antes .lead-grid h2,#mapa .lead-grid h2,#sedes .lead-grid h2,#montevideo .lead-grid h2,#agenda .lead-grid h2{max-width:760px}
+.practical-list{margin-bottom:90px;border-color:rgba(0,71,187,.22)}
+.practical-list details{border-color:rgba(0,71,187,.22)}
+.practical-list summary{color:var(--blue)}
+.practical-list summary i{width:46px;height:46px;border-color:rgba(0,71,187,.3);color:var(--green);background:#fff}
+.practical-list summary i svg,.benefit-mark svg{width:22px;height:22px}
+.practical-list summary small{color:var(--green)}.practical-list summary b{color:var(--green)}
+.practical-list details>div{color:#53677d}.practical-list details>div a{color:var(--blue)}
+.map-disclaimer a{color:#a5ead9;text-decoration:underline;text-underline-offset:4px}
+.recommendation-media{width:100%;height:78px;margin:-8px 0 15px;border-radius:10px;object-fit:cover;filter:saturate(.75)}
+.recommendation-media.featured-media{height:125px}
+.recommendation-media.mass-art{height:82px;padding:7px;background:#fff;object-fit:contain;filter:none}
+.recommendation.with-media{padding-top:20px}
+
+/* Destino: variación de color e interacción sin aumentar la escala. */
+.city-grid article{transition:transform .22s ease,background .22s ease,box-shadow .22s ease}
+.city-grid article:nth-child(1){background:rgba(255,255,255,.08)}
+.city-grid article:nth-child(2){background:var(--green)}
+.city-grid article:nth-child(3){background:rgba(0,0,0,.12)}
+.city-grid article:nth-child(4){background:rgba(255,255,255,.14)}
+.city-grid article:hover{z-index:2;transform:translateY(-5px) scale(1.015);box-shadow:0 16px 32px rgba(0,0,0,.18)}
+.related-links a{transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
+.related-links a:hover{transform:translateY(-3px);border-color:#8de0cb;box-shadow:0 10px 25px rgba(0,0,0,.15)}
+.benefit-card{cursor:pointer;transition:background .2s ease,transform .2s ease}
+.benefit-card:hover{background:rgba(255,255,255,.08);transform:translateY(-2px)}
+
+/* Segunda revisión: ritmo de secciones, idiomas y fotografía completa. */
+.sheet-head{position:relative}
+.language-switch{position:absolute;right:6%;bottom:-35px;z-index:4;display:flex;gap:6px}
+.language-switch button{padding:6px 10px;border:1px solid rgba(255,255,255,.32);border-radius:999px;background:transparent;color:rgba(255,255,255,.72);font:500 9px/1 var(--font-libre-franklin);cursor:pointer}
+.language-switch button.active{background:#fff;color:var(--blue)}
+.cover-index strong{font-size:13px}
+
+#mapa .lead-grid{position:relative;z-index:3;transform:translateX(-24px);margin-bottom:-20px;padding-bottom:18px}
+#sedes{background:var(--green)!important;color:#fff!important}
+#sedes .lead-grid{transform:translateX(-24px)}
+#sedes .lead-grid h2{color:#fff!important}
+#agenda .lead-grid{transform:translateX(-24px)}
+#montevideo{background:#f5f3ec!important;color:var(--blue)!important}
+#montevideo .lead-grid{transform:translateX(-24px);padding-top:45px;padding-bottom:26px}
+#montevideo .lead-grid h2{color:var(--blue)!important}
+#montevideo .city-grid p{color:rgba(255,255,255,.75)}
+#montevideo .city-grid h3{color:#fff}
+#montevideo .related-links a{background:var(--blue);color:#fff}
+#montevideo .related-links a:last-child{background:var(--green)}
+
+.recommendation-media,.recommendation-media.featured-media{height:112px;padding:7px;background:rgba(255,255,255,.95);object-fit:contain;filter:none}
+.recommendation.featured .recommendation-media{height:150px}
+.recommendation.mass-art{object-fit:contain}
+.map-disclaimer{border-left-color:var(--green)}
+
+@media(max-width:800px){
+  .language-switch{right:6%;bottom:-32px}
+  .cover-index strong{font-size:12px}
+  #mapa .lead-grid,#sedes .lead-grid,#agenda .lead-grid,#montevideo .lead-grid{transform:none;margin-bottom:0}
+  .route-layout{margin-left:4%;margin-right:4%;border-radius:16px}
+  .planner{padding:22px 18px}
+  .legend-control{flex-wrap:wrap}
+  .city-grid{grid-template-columns:1fr}
+  .accredited-benefits{grid-template-columns:1fr}
+}
+
+/* Correcciones de recorrido y legibilidad. */
+.document-shell{display:flex;flex-direction:column}
+#mapa .lead-grid{margin-bottom:0;padding-bottom:38px}
+.recommendation-media,.recommendation-media.featured-media,.recommendation.featured .recommendation-media{height:auto;max-height:170px;padding:0;background:transparent;object-fit:contain;border-radius:14px}
+.recommendation-media.mass-art{height:auto;max-height:120px;padding:0;background:transparent}
+#montevideo .city-grid article:nth-child(1){background:#0047bb}
+#montevideo .city-grid article:nth-child(2){background:#00a982}
+#montevideo .city-grid article:nth-child(3){background:#123f91}
+#montevideo .city-grid article:nth-child(4){background:#00685b}
+#montevideo .city-grid article,#montevideo .city-grid h3,#montevideo .city-grid p,#montevideo .city-grid .source{color:#fff}
+#montevideo .city-no{background:#00b388;color:#fff}
+
+.accredited-benefits>div,.accredited-benefits>.benefit-card{min-height:150px;padding:22px 22px 20px}
+.accredited-benefits>.benefit-card{display:grid;grid-template-columns:42px 1fr;gap:15px;border:0;border-left:1px solid rgba(255,255,255,.22);background:transparent;color:#fff;text-align:left;font:inherit;text-decoration:none}
+.accredited-benefits>.benefit-card p{margin:0;color:rgba(255,255,255,.68)!important;font-size:10px;line-height:1.5}
+.accredited-benefits>.benefit-card strong{display:block;margin-top:12px;color:#8de0cb;font-size:8px;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.accredited-benefits>.benefit-card:hover{background:rgba(255,255,255,.08);transform:translateY(-2px)}
+
+.bars-modal{position:fixed;z-index:100;inset:4vh 4vw;overflow:auto;padding:42px;border:1px solid rgba(255,255,255,.3);border-radius:24px;background:rgba(0,55,150,.98);color:#fff;box-shadow:0 30px 90px rgba(0,0,0,.42)}
+.bars-close{position:absolute;right:22px;top:18px;width:40px;height:40px;border:1px solid rgba(255,255,255,.4);border-radius:50%;background:transparent;color:#fff;font-size:26px;cursor:pointer}
+.bars-modal-head{max-width:650px;margin-bottom:28px}.bars-modal-head>span{color:#8de0cb;font-size:8px;font-weight:700;letter-spacing:.13em}.bars-modal-head h2{margin:8px 0;font-size:42px;letter-spacing:-.05em}.bars-modal-head p{color:rgba(255,255,255,.72);font-size:13px}
+.bars-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.bars-grid article{display:grid;grid-template-columns:38px 1fr;gap:12px;min-height:145px;padding:18px;border:1px solid rgba(255,255,255,.22);border-radius:14px;background:rgba(255,255,255,.07)}.bars-grid img{width:34px;height:34px;padding:5px;border-radius:9px;background:#fff}.bars-grid h3{margin:0 0 5px;font-size:15px}.bars-grid p{min-height:30px;margin:0 0 12px;color:rgba(255,255,255,.68);font-size:9px}.bars-grid button,.bars-grid a{display:block;margin-top:6px;padding:0;border:0;background:transparent;color:#9be5d2;font:600 8px/1.3 var(--font-libre-franklin);text-align:left;text-decoration:none;cursor:pointer}
+@media(max-width:800px){.bars-modal{inset:2vh 3vw;padding:55px 20px 30px}.bars-grid{grid-template-columns:1fr}.bars-modal-head h2{font-size:34px}.accredited-benefits>.benefit-card{border-top:1px solid rgba(255,255,255,.22);border-left:0}}
+
+/* Conocé lo local: sección propia entre los recomendados y el destino. */
+#local{background:var(--green)!important;color:#fff!important}
+.local-sheet{min-height:88svh;padding:74px 6% 85px}
+.local-lead{display:grid;grid-template-columns:.78fr 1.22fr;column-gap:70px;max-width:1220px;margin:0 auto 54px}
+.local-lead>span{grid-column:1/-1;margin-bottom:24px;color:#d7fff4;font-size:9px;font-weight:700;letter-spacing:.16em}
+.local-lead h2{margin:0;max-width:500px;color:#fff;font-size:clamp(48px,5.8vw,76px);font-weight:500;line-height:.94;letter-spacing:-.06em}
+.local-lead p{align-self:end;max-width:580px;margin:0 0 4px;color:rgba(255,255,255,.82);font-size:16px;line-height:1.65}
+#local .accredited-benefits{grid-template-columns:1fr 1fr;margin:0 auto;border-top:1px solid rgba(255,255,255,.45);border-bottom:1px solid rgba(255,255,255,.45)}
+#local .accredited-benefits>.benefit-card{min-height:245px;padding:34px;grid-template-columns:52px 1fr}
+#local .benefit-mark{width:48px;height:48px}
+#local .accredited-benefits h3{font-size:27px}
+#local .accredited-benefits>.benefit-card p{max-width:440px;font-size:13px;line-height:1.6}
+#local .accredited-benefits>.benefit-card strong{font-size:9px}
+
+/* Curaduría cultural: un cierre editorial, no una segunda grilla turística. */
+.culture-edit{max-width:1220px;margin:74px auto 36px;padding-top:42px;border-top:1px solid rgba(0,71,187,.24);color:var(--blue)}
+.culture-intro{display:grid;grid-template-columns:.7fr 1.3fr;gap:14px 45px;margin-bottom:28px}
+.culture-intro>span{grid-column:1/-1;color:var(--green);font-size:9px;font-weight:700;letter-spacing:.15em}
+.culture-intro h3{margin:0;color:var(--blue)!important;font-size:clamp(36px,4.5vw,58px);font-weight:500;line-height:1;letter-spacing:-.055em}
+.culture-intro p{align-self:end;max-width:520px;margin:0;color:#53677d!important;font-size:14px;line-height:1.6}
+.culture-list{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.culture-card{min-height:255px;padding:25px;border-radius:17px;background:var(--blue);color:#fff;text-decoration:none;transition:transform .22s ease,box-shadow .22s ease}
+.culture-card.candombe{background:#00685b}
+.culture-card:nth-child(2){background:#123f91}.culture-card:nth-child(3){background:#00a982}.culture-card:nth-child(4){background:#0047bb}
+.culture-card:hover{transform:translateY(-4px);box-shadow:0 14px 28px rgba(0,41,109,.16)}
+.culture-card small{display:block;color:#a8ead9;font-size:8px;font-weight:700;letter-spacing:.12em}
+.culture-card h4{max-width:470px;margin:14px 0 10px;color:#fff;font-size:24px;font-weight:550;line-height:1.05;letter-spacing:-.035em}
+.culture-card p{max-width:510px;margin:0 0 20px;color:rgba(255,255,255,.8)!important;font-size:12px;line-height:1.55}
+.culture-card strong{display:block;margin-top:auto;color:#fff;font-size:9px;font-weight:600}
+.ballet-note{display:grid;grid-template-columns:180px 1fr auto;gap:30px;align-items:center;margin-top:10px;padding:27px 30px;border:1px solid rgba(0,71,187,.2);border-radius:17px;background:#fff;color:var(--blue);text-decoration:none;transition:transform .22s ease,box-shadow .22s ease}
+.ballet-note:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(0,41,109,.12)}
+.ballet-note>span{color:var(--green);font-size:8px;font-weight:700;letter-spacing:.12em}.ballet-note h4{margin:0 0 7px;font-size:22px;font-weight:550;letter-spacing:-.035em}.ballet-note p{margin:0;color:#53677d!important;font-size:12px;line-height:1.55}.ballet-note>b{font-size:20px;font-weight:400}
+.culture-note{margin:14px 3px 0;color:#66788a!important;font-size:9px!important}
+
+@media(max-width:800px){
+  .local-sheet{padding:60px 6% 75px}.local-lead{grid-template-columns:1fr;gap:20px}.local-lead h2{font-size:50px}.local-lead p{font-size:14px}
+  #local .accredited-benefits{grid-template-columns:1fr;margin:0}#local .accredited-benefits>.benefit-card{min-height:210px;padding:25px 18px}
+  .culture-edit{margin:55px 6% 30px}.culture-intro{grid-template-columns:1fr}.culture-list{grid-template-columns:1fr}.culture-card{min-height:auto}.ballet-note{grid-template-columns:1fr auto;gap:14px}.ballet-note>span{grid-column:1/-1}
+}
+
+/* Cierre de arte: prevalece sobre las revisiones anteriores. */
+#local{position:relative;overflow:hidden;background:var(--blue)!important}
+#local::before{content:"";position:absolute;inset:0 0 auto auto;width:42%;height:100%;background:var(--green);clip-path:polygon(32% 0,100% 0,100% 100%,0 100%)}
+.local-sheet{padding:88px 6% 96px}.local-lead{position:relative;z-index:1;grid-template-columns:1fr 1.15fr;gap:70px;margin-bottom:66px}.local-lead h2{font-size:clamp(58px,7vw,92px)}.local-lead p{padding:4px 0 4px 28px;border-left:3px solid var(--green);color:#fff;font-size:17px;line-height:1.72}
+#local .accredited-benefits{position:relative;z-index:1;grid-template-columns:1fr 1fr;gap:14px;border:0}
+#local .accredited-benefits>.benefit-card{min-height:310px;padding:38px;border:1px solid rgba(255,255,255,.28);border-radius:18px;background:rgba(0,48,130,.9);box-shadow:0 18px 40px rgba(0,31,83,.2)}
+#local .accredited-benefits>.benefit-card:last-child{background:#f3efe3;color:var(--blue)}#local .accredited-benefits>.benefit-card:last-child h3{color:var(--blue)!important}#local .accredited-benefits>.benefit-card:last-child p{color:#53677d!important}#local .accredited-benefits>.benefit-card:last-child small,#local .accredited-benefits>.benefit-card:last-child strong{color:#008f70}#local .accredited-benefits>.benefit-card:last-child .benefit-mark{border-color:rgba(0,71,187,.25);color:var(--blue)}
+#montevideo .city-grid article:nth-child(4){border-color:rgba(0,179,136,.35);background:#eee8db;color:#008f70}#montevideo .city-grid article:nth-child(4) h3,#montevideo .city-grid article:nth-child(4) .source{color:#007c63!important}#montevideo .city-grid article:nth-child(4) p{color:#53677d!important}
+.culture-edit{margin:38px auto 36px;padding:55px 38px 38px;border:0;border-radius:24px;background:var(--blue);color:#fff;box-shadow:0 18px 45px rgba(0,38,103,.14)}.culture-intro{grid-template-columns:.72fr 1.28fr;margin-bottom:34px}.culture-intro h3{color:#fff!important}.culture-intro p{color:rgba(255,255,255,.8)!important}.culture-intro>span{color:#96e4d0}.culture-list{grid-template-columns:repeat(2,1fr);gap:14px}
+.culture-card{display:grid;grid-template-rows:190px 1fr;min-height:475px;padding:0;overflow:hidden;border:1px solid rgba(255,255,255,.2);background:#073f9f!important}.culture-card:nth-child(2){background:#00685b!important}.culture-card:nth-child(3){background:#007f69!important}.culture-card:nth-child(4){background:#123f91!important}.culture-card>img{width:100%;height:190px;object-fit:cover;filter:saturate(.82)}.culture-card>div{display:flex;flex-direction:column;padding:24px 25px 26px}.culture-card h4{font-size:27px}.culture-card strong{margin-top:auto}
+.culture-card.ideas-card{grid-column:1/-1;grid-template-columns:38% 1fr;grid-template-rows:1fr;min-height:300px;background:#f1ecdf!important;color:var(--blue)}.culture-card.ideas-card>img{height:100%;max-height:360px}.culture-card.ideas-card h4{color:var(--blue);font-size:34px}.culture-card.ideas-card p{color:#53677d!important}.culture-card.ideas-card small,.culture-card.ideas-card strong{color:#008f70}
+.bars-modal{inset:3vh 3vw;padding:46px 48px;background:rgba(0,50,139,.985)}.bars-modal-head h2{font-size:52px}.bars-grid{grid-template-columns:repeat(2,1fr);gap:12px}.bars-grid article{grid-template-columns:82px 1fr;min-height:170px;padding:20px 22px}.bars-grid img{width:76px;height:76px;padding:0;border-radius:14px;object-fit:cover}.bars-grid h3{font-size:20px}.bars-grid p{font-size:11px}.bar-actions{display:flex;gap:18px}.bars-grid .bar-actions button,.bars-grid .bar-actions a{display:inline-block;font-size:9px}
+@media(max-width:800px){#local::before{width:100%;height:34%;inset:auto 0 0;clip-path:polygon(0 28%,100% 0,100% 100%,0 100%)}.local-sheet{padding:68px 6% 75px}.local-lead{grid-template-columns:1fr;gap:28px}.local-lead h2{font-size:58px}.local-lead p{padding-left:20px;font-size:15px}#local .accredited-benefits{grid-template-columns:1fr}#local .accredited-benefits>.benefit-card{min-height:250px;padding:28px 22px}.culture-edit{margin:35px 4% 25px;padding:38px 18px 22px}.culture-intro,.culture-list{grid-template-columns:1fr}.culture-card{grid-template-rows:180px 1fr;min-height:430px}.culture-card.ideas-card{grid-column:auto;grid-template-columns:1fr;grid-template-rows:180px 1fr;min-height:430px}.culture-card.ideas-card>img{height:180px}.bars-modal{padding:54px 18px 28px}.bars-grid{grid-template-columns:1fr}.bars-grid article{grid-template-columns:64px 1fr}.bars-grid img{width:58px;height:58px}.bars-modal-head h2{font-size:40px}}
+
+/* Microinteracciones y marcas locales sin dependencias externas. */
+.practical-list details{position:relative;transition:transform .22s ease,box-shadow .22s ease,background .22s ease,border-color .22s ease}
+.practical-list details:hover{z-index:2;transform:translateY(-3px);border-color:rgba(0,179,136,.5);background:#fff;box-shadow:0 12px 28px rgba(0,52,137,.1)}
+.practical-list details:hover summary i{transform:scale(1.06);border-color:var(--green);box-shadow:0 6px 14px rgba(0,179,136,.13)}
+.practical-list summary i{transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
+.bar-wordmark{display:flex;width:76px;height:76px;padding:9px;flex-direction:column;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.3);border-radius:14px;background:#fff;color:var(--blue);font-size:10px;font-weight:800;line-height:1.03;letter-spacing:-.025em;text-align:center;text-transform:uppercase}
+.mark-montevideosur{border-radius:50%;background:#172032;color:#fff;font-family:Georgia,serif}.mark-paysandu{background:#f1e0bd;color:#d55331}.mark-santacatalina{background:#f7f0df;color:#00685b}.mark-brasilero{background:#5b231d;color:#f3dcad;font-family:Georgia,serif}.mark-ladiaria{background:#fff;color:#171717;font-size:13px;text-transform:none}.mark-brecha{background:#171717;color:#fff;letter-spacing:.08em}.mark-martei{background:#e9dfd0;color:#39423e;font-size:13px;text-transform:lowercase}.mark-capicua{background:#163c32;color:#f0d48a;letter-spacing:.08em}
+@media(max-width:800px){.bar-wordmark{width:58px;height:58px;padding:7px;font-size:8px}.mark-ladiaria,.mark-martei{font-size:10px}}
+
+/* Paleta institucional: Pantone 2412 C como verde dominante. */
+.culture-card.candombe{background:#00685b!important}
+.culture-card:nth-child(2){background:var(--green)!important}
+.culture-card:nth-child(3){background:var(--blue)!important}
+.culture-card:nth-child(4){background:var(--green)!important}
+.culture-card small,.culture-intro>span{color:#baf3e4}
+#montevideo .city-grid article:nth-child(2){background:var(--green)}
+#montevideo .city-grid article:nth-child(4){color:var(--green)}
+#montevideo .city-grid article:nth-child(4) h3,#montevideo .city-grid article:nth-child(4) .source{color:var(--green)!important}
+#local .accredited-benefits>.benefit-card:last-child small,#local .accredited-benefits>.benefit-card:last-child strong{color:var(--green)}
+
+/* Orientación y jerarquías finales. */
+.real-marker.venue span,.venue-dot{background:#ff2d8d!important}
+.real-marker.bar span,.bar-dot{background:#ff9f1c!important}
+.real-marker.visit span,.visit-dot{background:#c6ff00!important}
+.real-marker span{box-shadow:0 0 0 2px #fff,0 3px 11px rgba(0,0,0,.38)}
+#sedes .lead-grid,#sedes .lead-grid.compact{padding-top:48px;padding-bottom:34px}
+#sedes .lead-grid h2{font-size:clamp(48px,5.2vw,68px)}
+.local-lead h2{font-size:clamp(50px,5.7vw,74px)}
+
+@media(max-width:800px){
+  .reader-nav{left:12px;right:12px;bottom:10px;width:auto;height:56px;padding:0 12px;justify-content:space-between;border-radius:15px}
+  .reader-nav .page-status{display:flex;min-width:0;flex:1;justify-content:center;gap:10px}
+  .reader-nav .page-status strong{display:block;overflow:hidden;max-width:180px;font-size:9px;white-space:nowrap;text-overflow:ellipsis}
+  .reader-nav .page-status span{font-size:9px;white-space:nowrap}
+  .reader-nav .page-dots{display:none}
+  .reader-nav .arrow{flex:0 0 34px}
+  #sedes .lead-grid,#sedes .lead-grid.compact{padding-top:48px;padding-bottom:30px}
+  #sedes .lead-grid h2{font-size:50px}
+  .local-lead h2{font-size:48px}
+}
+
+/* Recomendados: las piezas secundarias forman dos pares de igual jerarquía. */
+.recommendation:not(.featured){display:flex;min-height:430px;flex-direction:column}
+.recommendation:not(.featured) .recommendation-media{width:100%;height:150px;max-height:none;margin:0 0 18px;padding:0;border-radius:14px;object-fit:cover}
+.recommendation:not(.featured) .recommendation-media.mass-art{height:150px;max-height:none;padding:0;background:transparent;object-fit:cover}
+.recommendation:not(.featured) h3{min-height:56px;margin-top:12px;margin-bottom:10px;display:flex;align-items:flex-start}
+.recommendation:not(.featured) p{margin-bottom:12px}
+.recommendation:not(.featured) .source{margin-top:auto}
+@media(max-width:800px){.recommendation:not(.featured){min-height:auto}.recommendation:not(.featured) .recommendation-media,.recommendation:not(.featured) .recommendation-media.mass-art{height:180px}.recommendation:not(.featured) h3{min-height:auto}}
