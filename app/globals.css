@@ -587,3 +587,10 @@ body,.leaflet-container{font-family:var(--font-libre-franklin),Arial,sans-serif}
 .recommendation:not(.featured) p{margin-bottom:12px}
 .recommendation:not(.featured) .source{margin-top:auto}
 @media(max-width:800px){.recommendation:not(.featured){min-height:auto}.recommendation:not(.featured) .recommendation-media,.recommendation:not(.featured) .recommendation-media.mass-art{height:180px}.recommendation:not(.featured) h3{min-height:auto}}
+/* Navegación de regreso cuando la guía vive dentro del Plan de sustentabilidad. */
+.back-to-plan{position:fixed;top:86px;left:18px;z-index:120;display:flex;align-items:center;gap:9px;padding:10px 14px;border:1px solid rgba(255,255,255,.42);border-radius:999px;background:rgba(0,71,187,.92);color:#fff;text-decoration:none;box-shadow:0 6px 20px rgba(0,31,91,.18);backdrop-filter:blur(8px);transition:top .25s ease,transform .2s ease,box-shadow .2s ease,background .2s ease,color .2s ease}
+.back-to-plan.is-scrolled{top:18px}
+.back-to-plan span{font-size:18px;line-height:1}
+.back-to-plan strong{font-size:11px;line-height:1;letter-spacing:.02em}
+.back-to-plan:hover,.back-to-plan:focus-visible{transform:translateY(-2px);background:#00b388;color:#082d45;box-shadow:0 9px 24px rgba(0,69,56,.25)}
+@media(max-width:600px){.back-to-plan{top:72px;left:10px;padding:9px 11px}.back-to-plan.is-scrolled{top:10px}.back-to-plan strong{font-size:10px}}

@@ -8,5 +8,6 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    X-Frame-Options = "SAMEORIGIN"
+    X-Frame-Options = "ALLOWALL"
+    Content-Security-Policy = "frame-ancestors 'self' https://ventana-sur.com https://www.ventana-sur.com"
     X-Content-Type-Options = "nosniff"

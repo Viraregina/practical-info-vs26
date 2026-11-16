@@ -2,6 +2,9 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+const localAsset = (path:string) => `${basePath}${path}`;
+
 type Place = { id:string; name:string; short:string; address:string; x:number; y:number; kind:"venue"|"bar"|"visit" };
 
 const places: Place[] = [
@@ -41,6 +44,7 @@ export default function Home(){
   const [showBars,setShowBars] = useState(false);
   const [showVisits,setShowVisits] = useState(true);
   const [barsOpen,setBarsOpen] = useState(false);
+  const [scrolled,setScrolled] = useState(false);
   const [liveRoute,setLiveRoute]=useState<{meters:number;minutes:number}|null>(null);
   const mapRef=useRef<any>(null);
   const markersRef=useRef<Record<string,any>>({});
@@ -63,6 +67,18 @@ export default function Home(){
     setPage(next);
     document.getElementById(pageIds[next])?.scrollIntoView({behavior:"smooth",block:"start"});
   };
+  useEffect(()=>{
+    if(new URLSearchParams(window.location.search).get("lang")==="en")setLang("en");
+  },[]);
+  useEffect(()=>{
+    document.documentElement.lang=lang;
+  },[lang]);
+  useEffect(()=>{
+    const updateScroll=()=>setScrolled(window.scrollY>80);
+    updateScroll();
+    window.addEventListener("scroll",updateScroll,{passive:true});
+    return()=>window.removeEventListener("scroll",updateScroll);
+  },[]);
   useEffect(()=>{
     const onKey=(event:KeyboardEvent)=>{
       if(event.key==="ArrowRight"||event.key==="PageDown") goToPage(page+1);
@@ -113,10 +129,11 @@ export default function Home(){
   },[origin,destination,mode]);
 
   return <main className="reader-shell">
+    {basePath&&<a className={`back-to-plan ${scrolled?"is-scrolled":""}`} href="/" aria-label={tr("Volver al Plan de sustentabilidad","Back to the Sustainability plan")}><span aria-hidden="true">←</span><strong>{tr("Plan de sustentabilidad","Sustainability plan")}</strong></a>}
     <div className="document-shell" aria-live="polite">
     <section className="sheet cover" id="inicio">
       <div className="sheet-head">
-        <img src="/ventana-sur-official.svg" alt="Ventana Sur" />
+        <img src={localAsset("/ventana-sur-official.svg")} alt="Ventana Sur" />
         <p>30 NOV—04 DIC 2026<br/>MONTEVIDEO · URUGUAY</p>
         <div className="language-switch" aria-label="Language"><button className={lang==="es"?"active":""} onClick={()=>setLang("es")}>🇺🇾 ESP</button><button className={lang==="en"?"active":""} onClick={()=>setLang("en")}>🇬🇧 ENG</button></div>
       </div>
@@ -206,7 +223,7 @@ export default function Home(){
           <a className="culture-card" href="https://www.teatrosolis.org.uy/PROGRAMACION/19-Festival-de-Jazz-de-Montevideo-uc3053" target="_blank" rel="noreferrer"><img src="/assets/culture/jazz.png" alt="Gráfica oficial del 19.º Festival de Jazz de Montevideo"/><div><small>{tr("04 DIC · 21 H · TEATRO SOLÍS","04 DEC · 9 PM · TEATRO SOLÍS")}</small><h4>{tr("19.º Festival de Jazz de Montevideo","19th Montevideo Jazz Festival")}</h4><p>{tr("La apertura celebra el centenario de Miles Davis con Kind of Blue: músicos nacionales e internacionales dialogan con una obra que transformó el lenguaje del jazz.","Opening night marks Miles Davis’s centenary with Kind of Blue, bringing national and international musicians into dialogue with an album that changed jazz.")}</p><strong>{tr("Ver festival","View festival")} ↗</strong></div></a>
         </div>
       </section>
-      <div className="related-links"><a href="https://accesibilidadvs26.netlify.app/" target="_blank" rel="noreferrer"><span>{tr("Guía relacionada","Related guide")}</span><strong>{tr("Información de accesibilidad","Accessibility information")}</strong><b>↗</b></a><a href="#"><span>{tr("Guía relacionada","Related guide")}</span><strong>{tr("Sustentabilidad","Sustainability")}</strong><b>↗</b></a></div>
+      <div className="related-links"><a href={`https://accesibilidadvs26.netlify.app/${lang==="en"?"en/":""}`} target="_blank" rel="noreferrer"><span>{tr("Guía relacionada","Related guide")}</span><strong>{tr("Información de accesibilidad","Accessibility information")}</strong><b>↗</b></a><a href={basePath?"/":"#"}><span>{tr("Guía relacionada","Related guide")}</span><strong>{tr("Sustentabilidad","Sustainability")}</strong><b>↗</b></a></div>
       <PageFoot page="07" />
     </section>
 
@@ -242,7 +259,7 @@ export default function Home(){
   </main>
 }
 
-function PageHead({section,title}:{section:string,title:string}){return <header className="page-head"><img src="/ventana-sur-official.svg" alt="Ventana Sur"/><p><span>{section}</span>{title}</p></header>}
+function PageHead({section,title}:{section:string,title:string}){return <header className="page-head"><img src={localAsset("/ventana-sur-official.svg")} alt="Ventana Sur"/><p><span>{section}</span>{title}</p></header>}
 function PageFoot({page}:{page:string}){return <footer className="page-foot"><span>VENTANA SUR · PRACTICAL INFO · 2026</span><span>{page}</span></footer>}
 function Source({href,label}:{href:string,label:string}){return <a className="source" href={href} target="_blank" rel="noreferrer">{label}<b>↗</b></a>}
 function UtilityIcon({type}:{type:"money"|"bus"|"plug"|"info"|"cup"|"store"}){
