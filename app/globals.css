@@ -632,6 +632,7 @@ html::-webkit-scrollbar-thumb:hover{background:#8dffe0}
 .back-to-plan:hover,.back-to-plan:focus-visible{background:var(--green);color:#111e56}
 
 #sedes{background:var(--blue)!important}
+#sedes.sheet{min-height:auto}
 #sedes .lead-grid h2{color:#fff!important}
 #sedes .venue-card>div>span{color:var(--green)}
 #local::before{background:var(--green)}
