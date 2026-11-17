@@ -133,7 +133,7 @@ export default function Home(){
     <div className="document-shell" aria-live="polite">
     <section className="sheet cover" id="inicio">
       <div className="sheet-head">
-        <img src={localAsset("/ventana-sur-official.svg")} alt="Ventana Sur" />
+        <img src={localAsset("/ventana-sur-crisp.png")} alt="Ventana Sur" />
         <p>30 NOV—04 DIC 2026<br/>MONTEVIDEO · URUGUAY</p>
       </div>
       <div className="cover-title">
@@ -259,7 +259,7 @@ export default function Home(){
   </main>
 }
 
-function PageHead({section,title}:{section:string,title:string}){return <header className="page-head"><img src={localAsset("/ventana-sur-official.svg")} alt="Ventana Sur"/><p><span>{section}</span>{title}</p></header>}
+function PageHead({section,title}:{section:string,title:string}){return <header className="page-head"><img src={localAsset("/ventana-sur-crisp.png")} alt="Ventana Sur"/><p><span>{section}</span>{title}</p></header>}
 function PageFoot({page}:{page:string}){return <footer className="page-foot"><span>VENTANA SUR · PRACTICAL INFO · 2026</span><span>{page}</span></footer>}
 function Source({href,label}:{href:string,label:string}){return <a className="source" href={href} target="_blank" rel="noreferrer">{label}<b>↗</b></a>}
 function UtilityIcon({type}:{type:"money"|"bus"|"plug"|"info"|"cup"|"store"}){
