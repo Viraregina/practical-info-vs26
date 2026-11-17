@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @font-face{font-family:"Libre Franklin";font-style:normal;font-weight:100 900;font-display:swap;src:url("/fonts/libre-franklin-latin-variable.woff2") format("woff2")}
-:root{--blue:#0047bb;--green:#00b388;--ink:#18344d;--muted:#657887;--paper:#e7ebee;--sheet:#f8f6f0;--line:#ccd5da;--font-libre-franklin:"Libre Franklin","Helvetica Neue",Arial,sans-serif;--font-geist-mono:"SFMono-Regular",Consolas,monospace;--font-geist-sans:"Libre Franklin","Helvetica Neue",Arial,sans-serif}
+:root{--blue:#2425ff;--green:#53f6c6;--ink:#18344d;--muted:#657887;--paper:#e7ebee;--sheet:#f8f6f0;--line:#ccd5da;--font-libre-franklin:"Libre Franklin","Helvetica Neue",Arial,sans-serif;--font-geist-mono:"SFMono-Regular",Consolas,monospace;--font-geist-sans:"Libre Franklin","Helvetica Neue",Arial,sans-serif}
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;overflow:hidden}
 body{background:var(--paper);color:var(--ink);font-family:var(--font-geist-sans),Arial,sans-serif}
@@ -594,3 +594,93 @@ body,.leaflet-container{font-family:var(--font-libre-franklin),Arial,sans-serif}
 .back-to-plan strong{font-size:11px;line-height:1;letter-spacing:.02em}
 .back-to-plan:hover,.back-to-plan:focus-visible{transform:translateY(-2px);background:#00b388;color:#082d45;box-shadow:0 9px 24px rgba(0,69,56,.25)}
 @media(max-width:600px){.back-to-plan{top:72px;left:10px;padding:9px 11px}.back-to-plan.is-scrolled{top:10px}.back-to-plan strong{font-size:10px}}
+
+/* Revisión cromática y de lectura integrada con Ventana Sur. */
+html{scrollbar-gutter:stable;scrollbar-color:var(--green) #1719cf}
+html::-webkit-scrollbar{width:13px}
+html::-webkit-scrollbar-track{background:#1719cf}
+html::-webkit-scrollbar-thumb{min-height:72px;border:3px solid #1719cf;border-radius:999px;background:var(--green)}
+html::-webkit-scrollbar-thumb:hover{background:#8dffe0}
+
+.cover,.cover .sheet-head{background:var(--blue)}
+.cover-index button{background:var(--green);color:#111e56}
+.cover-index button:hover{color:#111e56;box-shadow:0 10px 28px rgba(10,16,100,.3)}
+.cover-index b{color:#111e56}
+.scroll-hint{position:absolute;left:6%;bottom:23px;z-index:5;display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.84);font-size:10px;font-weight:650;letter-spacing:.09em;text-transform:uppercase}
+.scroll-hint b{display:grid;place-items:center;width:26px;height:26px;border:1px solid rgba(255,255,255,.5);border-radius:50%;color:var(--green);font-size:15px;animation:scroll-cue 1.7s ease-in-out infinite}
+@keyframes scroll-cue{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+
+#antes.sheet{min-height:auto;padding-bottom:44px}
+#antes .practical-lead{padding-top:42px;padding-bottom:22px}
+#antes .practical-lead h2{font-size:clamp(42px,4.6vw,58px)}
+.practical-list{margin-bottom:0}
+.practical-list summary{padding:16px 0}
+.practical-list summary i{width:42px;height:42px;border-width:1.5px;color:#1719cf}
+.practical-list summary i svg{width:23px;height:23px}
+.practical-list summary small,.practical-list summary b{color:#1719cf}
+.practical-list details>div a{color:#1719cf}
+
+.planner{background:#1719cf}
+.planner select{background:#2425ff}
+.swap{color:#111e56}
+.mode-controls button.selected{color:#1719cf}
+.route-result small,.route-result strong,.public-transport>span:first-child,.public-transport b{color:var(--green)}
+.page-status span{color:#1719cf}
+.page-dots button.current{background:#1719cf}
+.reader-nav .arrow{color:#1719cf}
+.back-to-plan{background:rgba(36,37,255,.94)}
+.back-to-plan:hover,.back-to-plan:focus-visible{background:var(--green);color:#111e56}
+
+#sedes{background:var(--blue)!important}
+#sedes .lead-grid h2{color:#fff!important}
+#sedes .venue-card>div>span{color:var(--green)}
+#local::before{background:var(--green)}
+#local .accredited-benefits>.benefit-card{background:rgba(23,25,207,.88)}
+.culture-card:nth-child(2),.culture-card:nth-child(4){background:#1719cf!important}
+
+@media(max-width:800px){
+  .scroll-hint{left:9%;bottom:25px}
+  #antes .practical-lead{padding-top:42px;padding-bottom:18px}
+  .practical-list{margin-bottom:0}
+}
+
+/* Contraste fino: recomendados, beneficios y agenda cultural. */
+#agenda{background:linear-gradient(145deg,#2425ff 0%,#1719cf 58%,#087f6f 100%)!important}
+#agenda .recommendations-grid{gap:14px}
+#agenda .recommendation{border:1px solid rgba(255,255,255,.38);box-shadow:0 14px 34px rgba(8,12,106,.2)}
+#agenda .recommendation:nth-child(1){background:#1719cf}
+#agenda .recommendation:nth-child(2){background:#2425ff}
+#agenda .recommendation:nth-child(3){background:#087f6f}
+#agenda .recommendation:nth-child(4){background:#2425ff}
+#agenda .recommendation:nth-child(5){background:#1719cf}
+#agenda .recommendation:nth-child(1),#agenda .recommendation:nth-child(3),#agenda .recommendation:nth-child(5){border-color:rgba(83,246,198,.62)}
+#agenda .recommendation>span{color:var(--green)}
+#agenda .recommendation .source{color:#fff;border-color:rgba(255,255,255,.48)}
+
+#local .accredited-benefits>.benefit-card:last-child small,
+#local .accredited-benefits>.benefit-card:last-child strong{color:#087f6f}
+#local .accredited-benefits>.benefit-card:last-child strong{display:inline-flex;width:max-content;padding:8px 11px;border:1px solid rgba(8,127,111,.42);border-radius:999px;background:rgba(8,127,111,.08)}
+
+.culture-card.candombe{background:linear-gradient(145deg,#075d55 0%,#087f6f 62%,#0c4a67 100%)!important;border-color:rgba(83,246,198,.58)}
+.culture-card.candombe small{color:var(--green)}
+.culture-card.candombe strong,
+.culture-card:nth-child(4) strong{display:inline-flex;width:max-content;padding:8px 11px;border-radius:999px;background:var(--green);color:#111e56;font-weight:750}
+.culture-card:nth-child(4){border-color:rgba(83,246,198,.58)}
+#montevideo .related-links a:last-child{background:var(--green);color:#111e56}
+#montevideo .related-links a:last-child span{color:rgba(17,30,86,.68)}
+
+#montevideo .city-grid article:nth-child(2){background:var(--green);color:#111e56}
+#montevideo .city-grid article:nth-child(2) h3,
+#montevideo .city-grid article:nth-child(2) p,
+#montevideo .city-grid article:nth-child(2) .source{color:#111e56!important}
+#montevideo .city-grid article:nth-child(2) .source{border-color:rgba(17,30,86,.28)}
+#montevideo .city-grid article:nth-child(2) .city-no{background:#1719cf;color:#fff}
+
+#montevideo .city-grid article:nth-child(1){background:#2425ff}
+#montevideo .city-grid article:nth-child(3){background:#1719cf}
+#montevideo .city-grid article:nth-child(4){background:#f3efe3;color:#087f6f}
+#montevideo .city-grid article:nth-child(4) h3,
+#montevideo .city-grid article:nth-child(4) .source{color:#087f6f!important}
+#montevideo .city-grid article:nth-child(4) p{color:#405f62!important}
+#montevideo .city-grid article:nth-child(4) .source{border-color:rgba(8,127,111,.3)}
+#montevideo .city-grid article:nth-child(4) .city-no{background:#087f6f;color:#fff}
