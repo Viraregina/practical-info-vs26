@@ -342,6 +342,18 @@ export default function Home(){
         <article><span className="city-no">03</span><h3>{tr("Una escapada cercana","A nearby getaway")}</h3><p>{tr("Con más tiempo, la costa de Canelones, Santa Lucía y Colonia ofrecen alternativas próximas para sumar al viaje.","With more time, the coast of Canelones, Santa Lucía and Colonia offer nearby additions to your trip.")}</p><Source href="https://uruguaynatural.com/es/experiences/patrimonio-y-naturaleza-en-santa-lucia-y-quinta-capurro/" label={tr("Uruguay Natural · Cerca de Montevideo","Uruguay Natural · Near Montevideo")} /></article>
         <article><span className="city-no">04</span><h3>{tr("Recorrer Uruguay","Explore Uruguay")}</h3><p>{tr("Para extender la estadía, consulta destinos, experiencias e itinerarios en las distintas regiones del país.","To extend your stay, browse destinations, experiences and itineraries across the country.")}</p><Source href="https://uruguaynatural.com/" label={tr("Uruguay Natural · Ministerio de Turismo","Uruguay Natural · Ministry of Tourism")} /></article>
       </div>
+      <a className="montevideo-plus-banner" href="https://www.descubrimontevideoplus.uy/" target="_blank" rel="noreferrer" aria-label={tr("Abrir Descubrí Montevideo Plus","Open Discover Montevideo Plus")}>
+        <div className="montevideo-plus-brand">
+          <img src={localAsset("/assets/partners/logo-descubri-montevideo.svg")} alt="Descubrí Montevideo"/>
+          <span>PLUS</span>
+        </div>
+        <div className="montevideo-plus-copy">
+          <small>{tr("TU GUÍA DIGITAL DEL DESTINO","YOUR DIGITAL DESTINATION GUIDE")}</small>
+          <h3>{tr("Armá tu recorrido por Montevideo","Plan your Montevideo itinerary")}</h3>
+          <p>{tr("Consultá la oferta actualizada, usá el asistente virtual y creá itinerarios según tu tiempo y tus preferencias.","Browse up-to-date recommendations, use the virtual assistant and create itineraries around your time and interests.")}</p>
+        </div>
+        <strong>{tr("Abrir la aplicación","Open the app")} ↗</strong>
+      </a>
       <section className="culture-edit" aria-labelledby="culture-title">
         <div className="culture-intro"><h3 id="culture-title">{tr("Cultura en la ciudad","Culture in the city")}</h3><p>{tr("Durante Ventana Sur, la cultura de Montevideo también está en escena. Aprovechá estos días para conocerla y ser parte.","While Ventana Sur is taking place, Montevideo’s culture is also on stage. Make the most of these days to discover it and take part.")}</p></div>
         <div className="culture-list">

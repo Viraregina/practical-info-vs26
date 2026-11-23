@@ -959,3 +959,16 @@ html::-webkit-scrollbar-thumb:hover{background:#8dffe0}
   .culture-intro{grid-template-columns:.78fr 1.22fr;gap:5vw}.culture-intro p{align-self:end}
 }
 @media(max-width:800px){.pdf-preview-notice{left:12px;right:12px;bottom:78px;text-align:center}.connected-guides-head h2{font-size:42px}.local-title{gap:26px}#montevideo .lead-grid h2{font-size:46px}}
+
+/* Descubrí Montevideo Plus: presencia institucional antes de la agenda cultural. */
+.montevideo-plus-banner{display:grid;grid-template-columns:minmax(190px,.72fr) minmax(320px,1.55fr) auto;gap:34px;align-items:center;margin:30px 3% 0;padding:28px 30px;border:1px solid rgba(255,255,255,.28);border-radius:20px;background:linear-gradient(120deg,#f5f0e5 0%,#fff 58%,#dff8ef 100%);color:#111e56;text-decoration:none;box-shadow:0 18px 38px rgba(0,20,70,.18);transition:transform .25s ease,box-shadow .25s ease}
+.montevideo-plus-banner:hover{transform:translateY(-5px);box-shadow:0 25px 50px rgba(0,20,70,.25)}
+.montevideo-plus-brand{display:flex;align-items:center;gap:10px;padding-right:26px;border-right:1px solid rgba(17,30,86,.18)}
+.montevideo-plus-brand img{display:block;width:100%;max-width:205px;height:auto}
+.montevideo-plus-brand span{align-self:flex-start;margin-top:-3px;padding:5px 7px;border-radius:999px;background:#111e56;color:#fff;font-size:8px;font-weight:900;letter-spacing:.12em}
+.montevideo-plus-copy small{display:block;margin-bottom:7px;color:#008f70;font-size:8px;font-weight:900;letter-spacing:.15em}
+.montevideo-plus-copy h3{margin:0 0 7px!important;color:#111e56!important;font-size:26px!important;line-height:1.05;letter-spacing:-.035em}
+.montevideo-plus-copy p{max-width:650px;margin:0!important;color:#53677d!important;font-size:13px!important;line-height:1.5!important}
+.montevideo-plus-banner>strong{display:inline-flex;align-items:center;justify-content:center;min-height:45px;padding:0 17px;border-radius:999px;background:#111e56;color:#fff;font-size:10px;white-space:nowrap;transition:background .2s ease,color .2s ease}
+.montevideo-plus-banner:hover>strong{background:#53f6c6;color:#111e56}
+@media(max-width:800px){.montevideo-plus-banner{grid-template-columns:1fr;gap:18px;margin:24px 18px 0;padding:24px}.montevideo-plus-brand{padding:0 0 17px;border-right:0;border-bottom:1px solid rgba(17,30,86,.18)}.montevideo-plus-brand img{max-width:220px}.montevideo-plus-copy h3{font-size:25px!important}.montevideo-plus-copy p{font-size:14px!important}.montevideo-plus-banner>strong{justify-self:start}}
