@@ -102,8 +102,18 @@
     if (cinando) cinando.classList.add('cinando-wide');
   }
 
+  function updatePlanetariumLink() {
+    const link = document.querySelector('a[href="https://www.montevideo.gub.uy/planetario"]');
+    if (link) link.href = 'https://www.instagram.com/planetario.de.montevideo/?hl=es';
+  }
+
+  function updateMauaLink() {
+    const link = document.querySelector('a[href="https://www.gub.uy/ministerio-educacion-cultura/comunicacion/noticias/1000-personas-disfrutaron-pelicula-dirigible-ciclo-cine-parque-maua"]');
+    if (link) link.href = 'https://montevideo.gub.uy/parques-de-montevideo/parque-maua';
+  }
+
   const observer = new MutationObserver(addBanner);
   observer.observe(document.documentElement, {childList: true, subtree: true});
-  window.addEventListener('load', () => { addBanner(); applyTextCorrections(); arrangeParticipationCards(); }, {once: true});
-  [0, 150, 500, 1200].forEach(delay => window.setTimeout(() => { addBanner(); applyTextCorrections(); arrangeParticipationCards(); }, delay));
+  window.addEventListener('load', () => { addBanner(); applyTextCorrections(); arrangeParticipationCards(); updatePlanetariumLink(); updateMauaLink(); }, {once: true});
+  [0, 150, 500, 1200].forEach(delay => window.setTimeout(() => { addBanner(); applyTextCorrections(); arrangeParticipationCards(); updatePlanetariumLink(); updateMauaLink(); }, delay));
 })();
