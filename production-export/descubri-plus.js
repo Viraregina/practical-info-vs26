@@ -51,8 +51,49 @@
     return true;
   }
 
+  const textCorrections = english
+    ? [
+        ['You will receive your accreditation at the hotel. If this is not the case, collect it at the accreditation desk.', 'You will receive your accreditation at your hotel. If you do not collect it there, you can pick it up at the accreditation desk.'],
+        ['The desk opens on Monday 30 November at 11 am. From Tuesday to Thursday it is open from 9:30 am to 5 pm at Auditorio Nacional “Adela Reta” (SODRE).', 'The accreditation desk at Auditorio Nacional “Adela Reta” (SODRE) will open at 11 am on Monday 30 November. From Tuesday to Thursday, it will be open from 9:30 am to 5 pm.'],
+        ['Transfers to hotels', 'Hotel transfer coordinator'],
+        ['Entry requirements may vary depending on nationality. Carrasco International Airport is approximately 20 kilometres from downtown Montevideo, where Ventana Sur activities will take place.', 'We recommend checking the official entry requirements, as they may vary depending on your nationality. Carrasco International Airport is approximately 20 kilometres from central Montevideo, where Ventana Sur activities will take place.'],
+        ['Montevideo is usually humid and windy. Daytime temperatures may range from 16°C to 28°C and rarely fall below 10°C at night. Bring layers, comfortable shoes, a sun hat and sunscreen.', 'Montevideo is usually humid and windy. At this time of year, daytime temperatures may range from 16°C to 28°C and rarely fall below 10°C at night. We recommend bringing layers, comfortable shoes, a sun hat and sunscreen.'],
+        ['The local currency is the Uruguayan peso ($). The organisation’s document uses approximate references of 44 pesos per euro and 41.50 pesos per US dollar; rates may fluctuate during the day. Cards are accepted by most businesses and services.', 'The local currency is the Uruguayan peso ($). As of November 2026, the reference exchange rates are 44 Uruguayan pesos per euro and 41.50 Uruguayan pesos per US dollar. Exchange rates are subject to change. Cards are accepted by most businesses and services.'],
+        ['Uruguay offers visitors zero VAT on restaurant services and car rental without a driver, as well as the Tax Free regime.', 'Uruguay offers tourists zero VAT on restaurant services and car rentals without a driver, as well as a Tax Free scheme.'],
+        ['Venues are close to one another, particularly in Centro and Ciudad Vieja. For longer distances use taxis, ride-hailing apps such as Uber or Cabify, or local buses. Check each venue location before the activity to plan your journey.', 'The proximity of the venues and the location of recommended hotels, restaurants, bars and cafés make it easier for accredited guests to get around. Our Sustainability Plan aims to reduce the need for motorised travel and encourage walking whenever each person’s circumstances and needs allow.\n\nFor longer distances, you can take a local bus or taxi, or use ride-hailing apps such as Uber or Cabify. Check the location before each activity to plan your journey.']
+      ]
+    : [
+        ['Van a recibir la acreditación en el hotel. Si no la reciben allí, podrán retirarla en el mostrador de acreditaciones.', 'Recibirás tu acreditación en el hotel. En caso de que no la retires, podrás hacerlo en el mostrador de acreditaciones.'],
+        ['El mostrador abrirá el lunes 30 de noviembre a las 11 h. De martes a jueves atenderá de 9:30 a 17 h en el Auditorio Nacional «Adela Reta» (SODRE).', 'El mostrador de acreditaciones del Auditorio Nacional «Adela Reta» (SODRE) atenderá el lunes 30 de noviembre a partir de las 11 h. De martes a jueves, estará abierto de 9:30 a 17 h.'],
+        ['Traslado a los hoteles', 'Coordinación de traslados a los hoteles'],
+        ['Los requisitos de ingreso pueden variar según la nacionalidad. El Aeropuerto Internacional de Carrasco está a unos 20 kilómetros del centro de Montevideo, donde se realizarán las actividades de Ventana Sur.', 'Te recomendamos consultar los requisitos oficiales de ingreso, ya que pueden variar según la nacionalidad. El Aeropuerto Internacional de Carrasco está a unos 20 kilómetros del centro de Montevideo, donde se realizarán las actividades de Ventana Sur.'],
+        ['Clima y qué llevar', 'Clima e indumentaria'],
+        ['Montevideo suele ser húmeda y ventosa. Las temperaturas diurnas pueden oscilar entre 16 °C y 28 °C y rara vez bajan de 10 °C por la noche. Llevá ropa en capas, calzado cómodo, gorro y protector solar.', 'Montevideo suele ser húmeda y ventosa. En esta época del año, las temperaturas diurnas pueden oscilar entre 16 °C y 28 °C y rara vez bajan de 10 °C por la noche. Te recomendamos llevar prendas que puedas usar en capas, calzado cómodo, gorro y protector solar.'],
+        ['La moneda local es el peso uruguayo ($). El documento de organización toma como referencia aproximada 44 pesos por euro y 41,50 pesos por dólar; la cotización puede variar durante el día. Se aceptan tarjetas en la mayoría de los comercios y servicios.', 'La moneda local es el peso uruguayo ($). En noviembre de 2026, la referencia para el cambio de divisas es de 44 pesos uruguayos por euro y 41,50 pesos uruguayos por dólar. La cotización está sujeta a variaciones. Se aceptan tarjetas en la mayoría de los comercios y servicios.'],
+        ['Las sedes están cerca unas de otras, especialmente en Centro y Ciudad Vieja. Para distancias más largas hay taxis, aplicaciones como Uber o Cabify y ómnibus. Consultá la ubicación antes de cada actividad para planificar el traslado.', 'La cercanía entre las sedes y la ubicación de los hoteles, restaurantes, bares y cafés recomendados facilitan los desplazamientos de las personas acreditadas. Nuestro Plan de Sustentabilidad busca reducir la necesidad de traslados motorizados y favorecer los recorridos a pie, de acuerdo con las posibilidades y necesidades de cada persona.\n\nPara distancias más largas, podés tomar ómnibus de línea o taxis, o utilizar aplicaciones como Uber o Cabify. Consultá la ubicación antes de cada actividad para planificar tu traslado.']
+      ];
+
+  function applyTextCorrections() {
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(node => {
+      textCorrections.forEach(([from, to]) => {
+        if (node.nodeValue !== from) return;
+        if (!to.includes('\n\n')) {
+          node.nodeValue = to;
+          return;
+        }
+        const [first, second] = to.split('\n\n');
+        const fragment = document.createDocumentFragment();
+        fragment.append(first, document.createElement('br'), document.createElement('br'), second);
+        node.replaceWith(fragment);
+      });
+    });
+  }
+
   const observer = new MutationObserver(addBanner);
   observer.observe(document.documentElement, {childList: true, subtree: true});
-  window.addEventListener('load', addBanner, {once: true});
-  [0, 150, 500, 1200].forEach(delay => window.setTimeout(addBanner, delay));
+  window.addEventListener('load', () => { addBanner(); applyTextCorrections(); }, {once: true});
+  [0, 150, 500, 1200].forEach(delay => window.setTimeout(() => { addBanner(); applyTextCorrections(); }, delay));
 })();
