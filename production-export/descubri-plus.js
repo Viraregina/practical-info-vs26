@@ -30,7 +30,8 @@
       .descubri-plus-copy p{max-width:610px;margin:0;font-size:14px;line-height:1.45;color:#494b68}
       .descubri-plus-action{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 20px;border:1px solid #2425ff;background:#2425ff;color:#fff!important;text-decoration:none!important;font-size:13px;font-weight:800;white-space:nowrap;transition:background .2s,color .2s,border-color .2s,transform .2s}
       .descubri-plus-action:hover,.descubri-plus-action:focus-visible{background:#53e3bd;border-color:#53e3bd;color:#181a42!important;transform:translateY(-2px)}
-      @media(max-width:760px){.descubri-plus-banner{grid-template-columns:1fr;gap:18px;padding:22px}.descubri-plus-brand{justify-content:flex-start}.descubri-plus-brand img{max-width:190px}.descubri-plus-action{width:100%}}
+      .participation-grid.expanded .cinando-wide{grid-column:1/-1;min-height:390px!important}
+      @media(max-width:760px){.descubri-plus-banner{grid-template-columns:1fr;gap:18px;padding:22px}.descubri-plus-brand{justify-content:flex-start}.descubri-plus-brand img{max-width:190px}.descubri-plus-action{width:100%}.participation-grid.expanded .cinando-wide{min-height:auto!important}}
     `;
     document.head.appendChild(style);
   }
@@ -92,8 +93,17 @@
     });
   }
 
+  function arrangeParticipationCards() {
+    const grid = document.querySelector('.participation-grid.expanded');
+    if (!grid) return;
+    const keyEvents = grid.querySelector('.key-events');
+    if (keyEvents) keyEvents.closest('article')?.remove();
+    const cinando = grid.querySelector('img[alt="Cinando"]')?.closest('article');
+    if (cinando) cinando.classList.add('cinando-wide');
+  }
+
   const observer = new MutationObserver(addBanner);
   observer.observe(document.documentElement, {childList: true, subtree: true});
-  window.addEventListener('load', () => { addBanner(); applyTextCorrections(); }, {once: true});
-  [0, 150, 500, 1200].forEach(delay => window.setTimeout(() => { addBanner(); applyTextCorrections(); }, delay));
+  window.addEventListener('load', () => { addBanner(); applyTextCorrections(); arrangeParticipationCards(); }, {once: true});
+  [0, 150, 500, 1200].forEach(delay => window.setTimeout(() => { addBanner(); applyTextCorrections(); arrangeParticipationCards(); }, delay));
 })();
