@@ -97,5 +97,5 @@
     document.querySelectorAll(".bars-modal").forEach(node=>node.remove());
     openModal(target.classList.contains("discount-benefit")?"discounts":"food");
   },true);
-  let attempts=0;const timer=setInterval(()=>{if(install()||++attempts>80)clearInterval(timer)},100);
+  let attempts=0;const timer=setInterval(()=>{install();if(++attempts>100)clearInterval(timer)},100);
 })();
